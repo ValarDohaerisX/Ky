@@ -32,6 +32,7 @@ public class MajorServiceImpl implements MajorService {
     @Override
     public Result<MajorPojo> add(MajorPojo majorPojo) {
         MajorPojo exist = majorMapper.isExist(majorPojo.getMajorCode(), majorPojo.getMajorName());
+        System.out.println("1");
         if (exist != null){
             return Result.failure(ApiReturnCode.C_Fail_Insert,"专业信息已存在，请勿重复添加");
         }
