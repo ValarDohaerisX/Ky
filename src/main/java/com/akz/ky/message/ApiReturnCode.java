@@ -38,7 +38,8 @@ public class ApiReturnCode extends AbstractReturnCode {
     public static final int C_Fail_Update_1 = 1006;
     public static final AbstractReturnCode C_Fail_Update = new ApiReturnCode("更新失败",C_Fail_Update_1);
 
-    private ApiReturnCode(){
+    public static final int C_Fail_1 = 1007;
+    public static final AbstractReturnCode C_Fail = new ApiReturnCode("操作失败",C_Fail_1);
 
-    }
+    private ApiReturnCode(){}
 }
