@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Mapper
 public interface LdcodeMapper {
-    @Select("select * from ldcode where codeType = #{codeType}")
+    @Select("select * from ldcode where codeType = #{codeType} order by code asc")
     public List<LdcodePojo> getLdCodeByCodeType(@Param("codeType") String codeType);
 
     @Select("select * from ldcode where codeType = 'schooltype' ")

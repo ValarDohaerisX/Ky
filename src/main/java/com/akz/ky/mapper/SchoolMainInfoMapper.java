@@ -22,7 +22,7 @@ public interface SchoolMainInfoMapper {
     @Insert("insert into schoolmaininfo set " +
             "infoType = #{smi.infoType},infoTitle = #{smi.infoTitle},infoContent = #{smi.infoContent},schoolNo = #{smi.schoolNo},createDate = #{smi.createDate}," +
             "createTime = #{smi.createTime},modifyDate = #{smi.modifyDate},modifyTime = #{smi.modifyTime}")
-    public boolean insert(@Param("smi")SchoolMainInfoPojo schoolMainInfoPojo);
+    public boolean add(@Param("smi")SchoolMainInfoPojo schoolMainInfoPojo);
 
     /**
      * 根据信息号修改院校相关信息
@@ -108,6 +108,7 @@ public interface SchoolMainInfoMapper {
     @Delete("delete from schoolmaininfo where infoNo = #{infoNo}")
     public boolean delete(@Param("infoNo")String infoNo);
 
-
+    @Select("select * from schoolmaininfo")
+    public List<SchoolMainInfoPojo> getByAll();
 
 }

@@ -57,7 +57,7 @@ public class MajorPojo {
 
     int scoreNumber;
     //近5年
-    Timestamp currYear;
+    String currYear;
 
     SchoolPojo schoolPojo;
 
