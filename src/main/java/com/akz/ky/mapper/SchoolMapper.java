@@ -28,7 +28,7 @@ public interface SchoolMapper {
             "schoolOnlineNet = #{s.schoolOnlineNet}," +
             "schoolKyStudentOnlineNet = #{s.schoolKyStudentOnlineNet} " +
             "</script>")
-    @Options(useGeneratedKeys = true,keyProperty = "id")
+    @Options(useGeneratedKeys = true,keyProperty = "s.schoolNo",keyColumn="schoolNo")
     boolean add(@Param("s") SchoolPojo schoolPojo);
 
     @Update({"<script>update school " +

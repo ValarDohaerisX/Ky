@@ -29,7 +29,7 @@ public class SchoolMainInfoServiceImpl implements SchoolMainInfoService {
     public Result insert(SchoolMainInfoPojo schoolMainInfoPojo) {
         if (schoolMainInfoPojo == null)
             return Result.failure(ApiReturnCode.C_Fail_Insert,"存入数据为空");
-        boolean flag = schoolMainInfoMapper.insert(schoolMainInfoPojo);
+        boolean flag = schoolMainInfoMapper.add(schoolMainInfoPojo);
         return Result.success(flag);
     }
 

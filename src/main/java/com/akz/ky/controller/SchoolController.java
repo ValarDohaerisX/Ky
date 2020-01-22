@@ -3,6 +3,7 @@ package com.akz.ky.controller;
 import com.akz.ky.message.ApiReturnCode;
 import com.akz.ky.message.Result;
 import com.akz.ky.pojo.LdcodePojo;
+import com.akz.ky.pojo.SchoolDetailPojo;
 import com.akz.ky.pojo.SchoolPojo;
 import com.akz.ky.service.LdcodeService;
 import com.akz.ky.service.SchoolService;
@@ -31,6 +32,25 @@ public class SchoolController {
         return schoolService.add(schoolPojo);
     }
 
+    /**
+     * 查询目标院校明细信息
+     * @param schoolNo
+     * @return SchoolDetailPojo
+     */
+    @RequestMapping(value = "getSchoolDetailInfo",method = RequestMethod.POST)
+    public Result<SchoolDetailPojo> getSchoolDetailInfo(@RequestParam String schoolNo){
+        return schoolService.getSchoolDetailInfo(schoolNo);
+    }
+
+    /**
+     * 添加/修改目标院校明细信息
+     * @param schoolDetailPojo
+     * @return SchoolDetailPojo
+     */
+    @RequestMapping(value = "setSchoolDetailInfo",method = RequestMethod.POST)
+    public Result<SchoolDetailPojo> setSchoolDetailInfo(@RequestBody SchoolDetailPojo schoolDetailPojo){
+        return schoolService.setSchoolDetailInfo(schoolDetailPojo);
+    }
     @RequestMapping(value = "update",method = RequestMethod.PUT)
     public Result update(@RequestBody SchoolPojo schoolPojo){
         return schoolService.update(schoolPojo);
@@ -80,4 +100,5 @@ public class SchoolController {
         }
         return Result.success(ldCodeByAddress);
     }
+
 }

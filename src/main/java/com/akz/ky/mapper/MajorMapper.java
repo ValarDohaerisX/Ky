@@ -55,4 +55,7 @@ public interface MajorMapper {
 
     @Delete("delete from major where majorNo = #{majorNo}")
     boolean deleteMajor(@Param("majorNo") int majorNo);
+
+    @Select("select *  from major where majorNo = #{majorNo}")
+    MajorPojo getByMajorNo(@Param("majorNo") int majorNo);
 }

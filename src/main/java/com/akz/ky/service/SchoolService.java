@@ -1,12 +1,16 @@
 package com.akz.ky.service;
 
 import com.akz.ky.message.Result;
+import com.akz.ky.pojo.SchoolDetailPojo;
+import com.akz.ky.pojo.SchoolMainInfoPojo;
 import com.akz.ky.pojo.SchoolPojo;
 import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author lzx
@@ -33,4 +37,10 @@ public interface SchoolService {
     Result<List<SchoolPojo>> getByAddressLike(String address);
 
     Result delete(String schoolNo);
+
+    Result<SchoolDetailPojo> getSchoolDetailInfo(String schoolNo);
+
+    Result<SchoolDetailPojo> setSchoolDetailInfo(SchoolDetailPojo schoolDetailPojo);
+
+    public LinkedHashMap<String,List<SchoolMainInfoPojo>> getSchoolMainInfoMaps(List<SchoolMainInfoPojo> schoolMainInfoPojos);
 }

@@ -23,11 +23,11 @@ public class SchoolMainInfoPojo {
     //目标院校编号
     String schoolNo;
     //创建日期
-    Date createDate;
+    String createDate;
     //创建时间
-    Date createTime;
+    String createTime;
     //上一次修改日期
-    Date modifyDate;
+    String modifyDate;
     //上一次修改时间
-    Date modifyTime;
+    String modifyTime;
 }
