@@ -18,7 +18,7 @@ public interface DepartmentMapper {
 
     @Insert({"insert into department set departmentNo = #{d.departmentNo},departmentName = #{d.departmentName},schoolNo = #{d.schoolNo}," +
             "schoolName = #{d.schoolName},majorNo = #{d.majorNo},majorName=#{d.majorName},majorCode=#{d.majorCode} "})
-    @Options(useGeneratedKeys=true, keyProperty="d.departmentNo", keyColumn="departmentNo")
+    @Options(useGeneratedKeys=true, keyProperty="d.departmentId", keyColumn="departmentId")
     boolean add(@Param("d") DepartmentPojo departmentPojo);
 
     @Select("select * from department where schoolNo = #{schoolNo}")
@@ -37,8 +37,8 @@ public interface DepartmentMapper {
             "<if test = 'd.schoolName !=null'>schoolName = #{d.schoolName},</if>" +
             "<if test = 'd.majorNo !=null'>majorNo = #{d.majorNo},</if>" +
             "<if test = 'd.majorName !=null'>majorName = #{d.majorName},</if>" +
-            "<if test = 'd.majorCode !=null'>majorCode = #{d.majorCode},</if>" +
-            " where infoNo = #{smi.info}</script>")
+            "<if test = 'd.majorCode !=null'>majorCode = #{d.majorCode}</if>" +
+            " where departmentId = #{d.departmentId}</script>")
     public boolean update(@Param("d")DepartmentPojo departmentPojo);
 
     /**

@@ -4,9 +4,12 @@ import com.akz.ky.message.ApiReturnCode;
 import com.akz.ky.message.Result;
 import com.akz.ky.pojo.LdcodePojo;
 import com.akz.ky.pojo.SchoolDetailPojo;
+import com.akz.ky.pojo.SchoolDetailRequestPojo;
 import com.akz.ky.pojo.SchoolPojo;
 import com.akz.ky.service.LdcodeService;
 import com.akz.ky.service.SchoolService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,6 +24,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("school")
+@Api(value = "目标院校信息接口")
 public class SchoolController {
     @Autowired
     SchoolService schoolService;
@@ -37,7 +41,7 @@ public class SchoolController {
      * @param schoolNo
      * @return SchoolDetailPojo
      */
-    @RequestMapping(value = "getSchoolDetailInfo",method = RequestMethod.POST)
+    @RequestMapping(value = "getSchoolDetailInfo",method = RequestMethod.GET)
     public Result<SchoolDetailPojo> getSchoolDetailInfo(@RequestParam String schoolNo){
         return schoolService.getSchoolDetailInfo(schoolNo);
     }
@@ -48,9 +52,10 @@ public class SchoolController {
      * @return SchoolDetailPojo
      */
     @RequestMapping(value = "setSchoolDetailInfo",method = RequestMethod.POST)
-    public Result<SchoolDetailPojo> setSchoolDetailInfo(@RequestBody SchoolDetailPojo schoolDetailPojo){
-        return schoolService.setSchoolDetailInfo(schoolDetailPojo);
+    public Result<SchoolDetailPojo> setSchoolDetailInfo(@RequestBody SchoolDetailRequestPojo schoolDetailRequestPojo){
+        return schoolService.setSchoolDetailInfo(schoolDetailRequestPojo);
     }
+
     @RequestMapping(value = "update",method = RequestMethod.PUT)
     public Result update(@RequestBody SchoolPojo schoolPojo){
         return schoolService.update(schoolPojo);

@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
@@ -39,12 +36,35 @@ class KyApplicationTests {
     @Autowired
     SchoolService schoolService;
     @Test
+    public void test5(){
+        List<Integer> i = new ArrayList<>();
+        i.add(1);i.add(2);i.add(3);i.add(4);i.add(5);
+        List<Integer> j = new ArrayList<>();
+        j.add(1);j.add(2);j.add(3);
+        Iterator<Integer> ii = i.iterator();
+        Iterator<Integer> jj = j.iterator();
+        while (ii.hasNext()){
+            Integer next = ii.next();
+            System.out.println("i:"+next);
+            while(jj.hasNext()){
+                Integer next1 = jj.next();
+                System.out.println("j:"+next1);
+                if (next1==2){
+                    System.out.println("ÊâßË°åÂà∞‰∏≠Êñ≠‰ª£Á†Å");
+                    jj.remove();
+                    break;
+                }
+            }
+        }
+
+    }
+    @Test
     public void test4(){
         List<SchoolMainInfoPojo> byAll = schoolMainInfoMapper.getByAll();
         LinkedHashMap<String, List<SchoolMainInfoPojo>> schoolMainInfoMaps = schoolService.getSchoolMainInfoMaps(byAll);
 //        System.out.println(schoolMainInfoMaps);
         for (Map.Entry<String, List<SchoolMainInfoPojo>> entry:schoolMainInfoMaps.entrySet()) {
-            System.out.println("–≈œ¢¿‡–Õ["+entry.getKey()+"]:\n–≈œ¢ºØ∫œ"+entry.getValue());
+            System.out.println("ÔøΩÔøΩœ¢ÔøΩÔøΩÔøΩÔøΩ["+entry.getKey()+"]:\nÔøΩÔøΩœ¢ÔøΩÔøΩÔøΩÔøΩ"+entry.getValue());
         }
     }
     @Test
@@ -52,7 +72,7 @@ class KyApplicationTests {
         SchoolPojo bySchoolNo = schoolMapper.getBySchoolNo("4");
         String schoolLevel = bySchoolNo.getSchoolLevel();
         System.out.println(bySchoolNo.getSchoolLevel());
-        //        ["“ª¡˜—ßø∆","985∏ﬂ–£","211∏ﬂ–£"]
+        //        ["“ªÔøΩÔøΩ—ßÔøΩÔøΩ","985ÔøΩÔøΩ–£","211ÔøΩÔøΩ–£"]
         char[] chars = schoolLevel.toCharArray();
         String s = "";
         for (char c:chars){

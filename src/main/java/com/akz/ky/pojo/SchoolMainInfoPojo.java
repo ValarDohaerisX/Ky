@@ -27,7 +27,7 @@ public class SchoolMainInfoPojo {
     //创建时间
     String createTime;
     //上一次修改日期
-    String modifyDate;
+    String lastModifyDate;
     //上一次修改时间
-    String modifyTime;
+    String lastModifyTime;
 }

@@ -21,7 +21,8 @@ public interface SchoolMainInfoMapper {
      */
     @Insert("insert into schoolmaininfo set " +
             "infoType = #{smi.infoType},infoTitle = #{smi.infoTitle},infoContent = #{smi.infoContent},schoolNo = #{smi.schoolNo},createDate = #{smi.createDate}," +
-            "createTime = #{smi.createTime},modifyDate = #{smi.modifyDate},modifyTime = #{smi.modifyTime}")
+            "createTime = #{smi.createTime},lastModifyDate = #{smi.lastModifyDate},lastModifyTime = #{smi.lastModifyTime}")
+    @Options(useGeneratedKeys=true, keyProperty="smi.infoNo", keyColumn="infoNo")
     public boolean add(@Param("smi")SchoolMainInfoPojo schoolMainInfoPojo);
 
     /**
@@ -36,9 +37,9 @@ public interface SchoolMainInfoMapper {
             "<if test = 'smi.schoolNo !=null'>schoolNo = #{smi.schoolNo},</if>" +
             "<if test = 'smi.createDate !=null'>createDate = #{smi.createDate},</if>" +
             "<if test = 'smi.createTime !=null'>createTime = #{smi.createTime},</if>" +
-            "<if test = 'smi.modifyDate !=null'>modifyDate = #{smi.modifyDate},</if>" +
-            "<if test = 'smi.modifyTime !=null'>modifyTime = #{smi.modifyTime},</if>" +
-            " where infoNo = #{smi.info}</script>")
+            "<if test = 'smi.lastModifyDate !=null'>lastModifyDate = #{smi.lastModifyDate},</if>" +
+            "<if test = 'smi.lastModifyTime !=null'>lastModifyTime = #{smi.lastModifyTime}</if>" +
+            " where infoNo = #{smi.infoNo}</script>")
     public boolean update(@Param("smi")SchoolMainInfoPojo schoolMainInfoPojo);
 
     /**

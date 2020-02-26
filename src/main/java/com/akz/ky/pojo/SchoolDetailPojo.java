@@ -22,6 +22,6 @@ public class SchoolDetailPojo {
     //学院信息
     List<DepartmentPojo> departmentPojos;
     //综合信息
-    List<SchoolMainInfoPojo> schoolMainInfoPojos;
+    List<List<SchoolMainInfoPojo>> schoolMainInfoPojos;
 
 }

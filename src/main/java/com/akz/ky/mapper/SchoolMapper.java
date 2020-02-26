@@ -31,18 +31,18 @@ public interface SchoolMapper {
     @Options(useGeneratedKeys = true,keyProperty = "s.schoolNo",keyColumn="schoolNo")
     boolean add(@Param("s") SchoolPojo schoolPojo);
 
-    @Update({"<script>update school " +
-            "<if test = 's.schoolName ! = null'>set schoolName = #{s.schoolName} , </if>" +
-            "<if test = 's.schoolCode ! = null'>set schoolCode = #{s.schoolCode} , </if>" +
-            "<if test = 's.schoolType ! = null'>set schoolType = #{s.schoolType} , </if>" +
-            "<if test = 's.schoolLevel ! = null'>set schoolLevel = #{s.schoolLevel} , </if>" +
-            "<if test = 's.address ! = null'>set address = #{s.address} , </if>" +
-            "<if test = 's.schoolInfo ! = null'>set schoolInfo = #{s.schoolInfo} , </if>" +
-            "<if test = 's.schoolMail ! = null'>set schoolMail = #{s.schoolMail} , </if>" +
-            "<if test = 's.schoolMobile ! = null'>set schoolMobile = #{s.schoolMobile} , </if>" +
-            "<if test = 's.schoolAddress ! = null'>set schoolAddress = #{s.schoolAddress} , </if>" +
-            "<if test = 's.schoolOnlineNet ! = null'>set schoolOnlineNet = #{s.schoolOnlineNet} ,</if>" +
-            "<if test = 's.schoolKyStudentOnlineNet ! = null'>set schoolKyStudentOnlineNet = #{s.schoolKyStudentOnlineNet} </if>" +
+    @Update({"<script>update school set " +
+            "<if test = 's.schoolName != null'>schoolName = #{s.schoolName} , </if>" +
+            "<if test = 's.schoolCode != null'>schoolCode = #{s.schoolCode} , </if>" +
+            "<if test = 's.schoolType != null'>schoolType = #{s.schoolType} , </if>" +
+            "<if test = 's.schoolLevel != null'>schoolLevel = #{s.schoolLevel} , </if>" +
+            "<if test = 's.address != null'>address = #{s.address} , </if>" +
+            "<if test = 's.schoolInfo != null'>schoolInfo = #{s.schoolInfo} , </if>" +
+            "<if test = 's.schoolMail != null'>schoolMail = #{s.schoolMail} , </if>" +
+            "<if test = 's.schoolMobile != null'>schoolMobile = #{s.schoolMobile} , </if>" +
+            "<if test = 's.schoolAddress != null'>schoolAddress = #{s.schoolAddress} , </if>" +
+            "<if test = 's.schoolOnlineNet != null'>schoolOnlineNet = #{s.schoolOnlineNet} ,</if>" +
+            "<if test = 's.schoolKyStudentOnlineNet != null'>schoolKyStudentOnlineNet = #{s.schoolKyStudentOnlineNet} </if>" +
             " where schoolNo = #{s.schoolNo}" +
             "</script>"})
     boolean update(@Param("s") SchoolPojo schoolPojo);
