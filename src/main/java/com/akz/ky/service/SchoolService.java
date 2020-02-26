@@ -2,6 +2,7 @@ package com.akz.ky.service;
 
 import com.akz.ky.message.Result;
 import com.akz.ky.pojo.SchoolDetailPojo;
+import com.akz.ky.pojo.SchoolDetailRequestPojo;
 import com.akz.ky.pojo.SchoolMainInfoPojo;
 import com.akz.ky.pojo.SchoolPojo;
 import org.apache.ibatis.annotations.Delete;
@@ -19,6 +20,16 @@ import java.util.Map;
  * @Description
  */
 public interface SchoolService {
+
+    public static final String getStudent = "getStudent";
+
+    public static final String title = "title";
+
+    public static final String dispensing = "dispensing";
+
+    public static final String describe = "describe";
+
+    public static final String scholarship = "scholarship";
 
     Result add(SchoolPojo schoolPojo);
 
@@ -40,7 +51,8 @@ public interface SchoolService {
 
     Result<SchoolDetailPojo> getSchoolDetailInfo(String schoolNo);
 
-    Result<SchoolDetailPojo> setSchoolDetailInfo(SchoolDetailPojo schoolDetailPojo);
+    Result<SchoolDetailPojo> setSchoolDetailInfo(SchoolDetailRequestPojo schoolDetailRequestPojo);
 
-    public LinkedHashMap<String,List<SchoolMainInfoPojo>> getSchoolMainInfoMaps(List<SchoolMainInfoPojo> schoolMainInfoPojos);
+    LinkedHashMap<String,List<SchoolMainInfoPojo>> getSchoolMainInfoMaps(List<SchoolMainInfoPojo> schoolMainInfoPojos);
+
 }

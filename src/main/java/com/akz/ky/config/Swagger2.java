@@ -40,12 +40,12 @@ public class Swagger2 {
      * 添加摘要信息
      */
     private ApiInfo apiInfo(){
-        Contact contact = new Contact("lzx", "www.zhangweishihundan.com", "97261928@qq.com");
+        Contact contact = new Contact("lzx", "www.zhangweishihundan.com", "972619248@qq.com");
         return new ApiInfoBuilder()
-                .title("服务接口")
+                .title("考研交流平台系统后台服务接口测试界面")
                 .description("后台接口测试")
                 .contact(contact)   // 联系方式
-                .version("1.1.0")  // 版本
+                .version("1.1.2")  // 版本
                 .build();
     }
 }

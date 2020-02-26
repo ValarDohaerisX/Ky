@@ -2,53 +2,51 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="1bbe4589-3ad5-4400-8ca6-e3a3537b1014" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/mapper/DepartmentMapper.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/DepartmentPojo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/ImagePojo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/SchoolDetailPojo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/VideoPojo.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/utils/DateUtil.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/controller/SchoolController.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/DepartmentMapper.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/SchoolMapper.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/DepartmentPojo.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/ImagePojo.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/VideoPojo.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/schoolDetailPojo.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/service/LdcodeService.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/LdcodeServiceImpl.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/SchoolMainInfoServiceImpl.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/utils/DateUtil.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/DepartmentForm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/DescribeForm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/DispensingForm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/GetStudentForm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/ScholarshipForm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/SchoolDetailRequestPojo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/TitleForm.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/DepartmentForm.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/DescribeForm.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/DispensingForm.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/GetStudentForm.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/ScholarshipForm.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/SchoolDetailRequestPojo.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/TitleForm.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/config/Swagger2.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/config/Swagger2.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/controller/SchoolController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/controller/SchoolController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/mapper/LdcodeMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/mapper/LdcodeMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/mapper/MajorMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/mapper/MajorMapper.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/mapper/DepartmentMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/mapper/DepartmentMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/mapper/SchoolMainInfoMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/mapper/SchoolMainInfoMapper.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/mapper/SchoolMapper.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/mapper/SchoolMapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/MajorPojo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/MajorPojo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/SchoolDetailPojo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/SchoolDetailPojo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/SchoolMainInfoPojo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/pojo/SchoolMainInfoPojo.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/service/SchoolService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/service/SchoolService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/service/impl/SchoolMainInfoServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/service/impl/SchoolMainInfoServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/akz/ky/service/impl/SchoolServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/akz/ky/service/impl/SchoolServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/test/java/com/akz/ky/KyApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/com/akz/ky/KyApplicationTests.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/config/Swagger2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/config/Swagger2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/controller/CourseController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/controller/CourseController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/controller/SchoolController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/controller/SchoolController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/controller/UserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/controller/UserController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/LdcodeMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/LdcodeMapper.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/MajorMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/MajorMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/DepartmentMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/DepartmentMapper.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/SchoolMainInfoMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/SchoolMainInfoMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/SchoolMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/mapper/SchoolMapper.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/message/ApiReturnCode.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/message/ApiReturnCode.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/CoursePojo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/CoursePojo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/FirstCoursePojo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/FirstCoursePojo.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/MajorPojo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/MajorPojo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/SchoolMainInfoPojo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/SchoolMainInfoPojo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/schoolDetailPojo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/pojo/schoolDetailPojo.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/service/SchoolService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/service/SchoolService.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/CourseServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/CourseServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/FirstCourseServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/FirstCourseServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/MajorServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/MajorServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/ManagerServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/ManagerServiceImpl.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/SchoolServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/SchoolServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/SchoolMainInfoServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/SchoolMainInfoServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/SchoolServiceImpl.class" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/SecondCourseServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/akz/ky/service/impl/SecondCourseServiceImpl.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/test-classes/com/akz/ky/KyApplicationTests.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/test-classes/com/akz/ky/KyApplicationTests.class" afterDir="false" />
     </list>
@@ -105,6 +103,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ExpandSpringBootJavaOptionsPanel" value="true" />
     <property name="RequestMappingsPanelOrder0" value="0" />
     <property name="RequestMappingsPanelOrder1" value="1" />
     <property name="RequestMappingsPanelWidth0" value="75" />
@@ -125,7 +124,7 @@
     <property name="project.structure.last.edited" value="Project" />
     <property name="project.structure.proportion" value="0.0" />
     <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="settings.editor.selected.configurable" value="MavenSettings" />
   </component>
   <component name="RecentsManager">
     <key name="CreateTestDialog.RecentsKey">
@@ -138,26 +137,13 @@
       <recent name="E:\ky\src\main\java\com\akz\ky" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.DateUtil">
+  <component name="RunManager" selected="Spring Boot.KyApplication">
     <configuration name="DateUtil" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="com.akz.ky.utils.DateUtil" />
       <module name="ky" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="com.akz.ky.utils.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
-    <configuration name="SchoolController" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="com.akz.ky.controller.SchoolController" />
-      <module name="ky" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.akz.ky.controller.*" />
           <option name="ENABLED" value="true" />
         </pattern>
       </extension>
@@ -210,20 +196,46 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="KyApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <configuration name="KyApplicationTests.test5" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="ky" />
-      <option name="SPRING_BOOT_MAIN_CLASS" value="com.akz.ky.KyApplication" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.akz.ky.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.akz.ky" />
+      <option name="MAIN_CLASS_NAME" value="com.akz.ky.KyApplicationTests" />
+      <option name="METHOD_NAME" value="test5" />
+      <option name="TEST_OBJECT" value="method" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <configuration name="KyApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="ky" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.akz.ky.KyApplication" />
+      <option name="VM_PARAMETERS" value="-Dfile.encoding=UTF-8" />
+      <option name="ALTERNATIVE_JRE_PATH" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Application.DateUtil" />
+      <item itemvalue="Application.SchoolServiceImpl" />
+      <item itemvalue="JUnit.KyApplicationTests.test3" />
+      <item itemvalue="JUnit.KyApplicationTests.test4" />
+      <item itemvalue="JUnit.KyApplicationTests.test5" />
+      <item itemvalue="Spring Boot.KyApplication" />
+    </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.KyApplicationTests.test5" />
         <item itemvalue="Application.DateUtil" />
         <item itemvalue="Application.SchoolServiceImpl" />
         <item itemvalue="JUnit.KyApplicationTests.test4" />
         <item itemvalue="JUnit.KyApplicationTests.test3" />
-        <item itemvalue="Application.SchoolController" />
       </list>
     </recent_temporary>
   </component>
@@ -287,7 +299,13 @@
       <workItem from="1578917056034" duration="5130000" />
       <workItem from="1578997746090" duration="2571000" />
       <workItem from="1579072215887" duration="10006000" />
-      <workItem from="1579088929752" duration="31961000" />
+      <workItem from="1579088929752" duration="46409000" />
+      <workItem from="1580697266010" duration="716000" />
+      <workItem from="1580698412945" duration="3384000" />
+      <workItem from="1580797723748" duration="4533000" />
+      <workItem from="1581766291890" duration="70122000" />
+      <workItem from="1582533242567" duration="3894000" />
+      <workItem from="1582612475883" duration="10358000" />
     </task>
     <task id="LOCAL-00001" summary="提交代码">
       <created>1575894296939</created>
@@ -310,7 +328,14 @@
       <option name="project" value="LOCAL" />
       <updated>1577949685506</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="1001-后台管理系统-目标院系信息界面-显示明细信息接口已开发完成">
+      <created>1579224719403</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1579224719404</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -322,17 +347,6 @@
         <entry key="MAIN">
           <value>
             <State>
-              <option name="FILTERS">
-                <map>
-                  <entry key="branch">
-                    <value>
-                      <list>
-                        <option value="master" />
-                      </list>
-                    </value>
-                  </entry>
-                </map>
-              </option>
               <option name="COLUMN_ORDER" />
             </State>
           </value>
@@ -358,13 +372,22 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="测试新建分支" />
     <MESSAGE value="提交代码" />
-    <option name="LAST_COMMIT_MESSAGE" value="提交代码" />
+    <MESSAGE value="1001-后台管理系统-目标院系信息界面-显示明细信息接口已开发完成" />
+    <option name="LAST_COMMIT_MESSAGE" value="1001-后台管理系统-目标院系信息界面-显示明细信息接口已开发完成" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="488" y="73" key="#com.intellij.ide.util.MemberChooser" timestamp="1578983592430">
+    <state x="513" y="218" key="#com.intellij.debugger.actions.ViewTextAction" timestamp="1582030156460">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="488" y="73" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1578983592430" />
+    <state x="513" y="218" key="#com.intellij.debugger.actions.ViewTextAction/0.0.1366.728@0.0.1366.728" timestamp="1582030156460" />
+    <state x="137" y="18" width="1174" height="691" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1579228121483">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="137" y="18" width="1174" height="691" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.728@0.0.1366.728" timestamp="1579228121483" />
+    <state x="488" y="73" key="#com.intellij.ide.util.MemberChooser" timestamp="1582028607543">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state x="488" y="73" key="#com.intellij.ide.util.MemberChooser/0.0.1366.728@0.0.1366.728" timestamp="1582028607543" />
     <state x="413" y="110" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1577362278639">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -373,14 +396,14 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="132" y="15" width="1099" height="675" key="CommitChangelistDialog2/0.0.1366.728@0.0.1366.728" timestamp="1579224707679" />
-    <state width="493" height="438" key="DebuggerActiveHint" timestamp="1579224370428">
+    <state width="552" height="438" key="DebuggerActiveHint" timestamp="1582622821739">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="493" height="438" key="DebuggerActiveHint/0.0.1366.728@0.0.1366.728" timestamp="1579224370428" />
-    <state x="18" y="35" width="1313" height="635" key="DiffContextDialog" timestamp="1577408185780">
+    <state width="552" height="438" key="DebuggerActiveHint/0.0.1366.728@0.0.1366.728" timestamp="1582622821739" />
+    <state x="18" y="35" width="1313" height="635" key="DiffContextDialog" timestamp="1581947821728">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="18" y="35" width="1313" height="635" key="DiffContextDialog/0.0.1366.728@0.0.1366.728" timestamp="1577408185780" />
+    <state x="18" y="35" width="1313" height="635" key="DiffContextDialog/0.0.1366.728@0.0.1366.728" timestamp="1581947821728" />
     <state x="463" y="118" key="FileChooserDialogImpl" timestamp="1575942455336">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -389,54 +412,54 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state width="629" height="308" key="Git.Branch.Popup/0.0.1366.728@0.0.1366.728" timestamp="1578212828348" />
-    <state width="1323" height="177" key="GridCell.Tab.0.bottom" timestamp="1579224468964">
+    <state width="1323" height="216" key="GridCell.Tab.0.bottom" timestamp="1582622499194">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1579224468964" />
-    <state width="1323" height="177" key="GridCell.Tab.0.center" timestamp="1579224468963">
+    <state width="1323" height="216" key="GridCell.Tab.0.bottom/0.0.1366.728@0.0.1366.728" timestamp="1582622499194" />
+    <state width="1323" height="216" key="GridCell.Tab.0.center" timestamp="1582622499191">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1579224468963" />
-    <state width="1323" height="177" key="GridCell.Tab.0.left" timestamp="1579224468963">
+    <state width="1323" height="216" key="GridCell.Tab.0.center/0.0.1366.728@0.0.1366.728" timestamp="1582622499191" />
+    <state width="1323" height="216" key="GridCell.Tab.0.left" timestamp="1582622499188">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1579224468963" />
-    <state width="1323" height="177" key="GridCell.Tab.0.right" timestamp="1579224468964">
+    <state width="1323" height="216" key="GridCell.Tab.0.left/0.0.1366.728@0.0.1366.728" timestamp="1582622499188" />
+    <state width="1323" height="216" key="GridCell.Tab.0.right" timestamp="1582622499193">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1579224468964" />
-    <state width="1323" height="177" key="GridCell.Tab.1.bottom" timestamp="1579224468965">
+    <state width="1323" height="216" key="GridCell.Tab.0.right/0.0.1366.728@0.0.1366.728" timestamp="1582622499193" />
+    <state width="1323" height="216" key="GridCell.Tab.1.bottom" timestamp="1582622132009">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1579224468965" />
-    <state width="1323" height="177" key="GridCell.Tab.1.center" timestamp="1579224468965">
+    <state width="1323" height="216" key="GridCell.Tab.1.bottom/0.0.1366.728@0.0.1366.728" timestamp="1582622132009" />
+    <state width="1323" height="216" key="GridCell.Tab.1.center" timestamp="1582622132009">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1579224468965" />
-    <state width="1323" height="177" key="GridCell.Tab.1.left" timestamp="1579224468964">
+    <state width="1323" height="216" key="GridCell.Tab.1.center/0.0.1366.728@0.0.1366.728" timestamp="1582622132009" />
+    <state width="1323" height="216" key="GridCell.Tab.1.left" timestamp="1582622132008">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1579224468964" />
-    <state width="1323" height="177" key="GridCell.Tab.1.right" timestamp="1579224468965">
+    <state width="1323" height="216" key="GridCell.Tab.1.left/0.0.1366.728@0.0.1366.728" timestamp="1582622132008" />
+    <state width="1323" height="216" key="GridCell.Tab.1.right" timestamp="1582622132009">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1579224468965" />
-    <state width="1323" height="177" key="GridCell.Tab.2.bottom" timestamp="1576458187426">
+    <state width="1323" height="216" key="GridCell.Tab.1.right/0.0.1366.728@0.0.1366.728" timestamp="1582622132009" />
+    <state width="901" height="216" key="GridCell.Tab.2.bottom" timestamp="1582621755744">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.2.bottom/0.0.1366.728@0.0.1366.728" timestamp="1576458187426" />
-    <state width="1323" height="177" key="GridCell.Tab.2.center" timestamp="1576458187425">
+    <state width="901" height="216" key="GridCell.Tab.2.bottom/0.0.1366.728@0.0.1366.728" timestamp="1582621755744" />
+    <state width="901" height="216" key="GridCell.Tab.2.center" timestamp="1582621755744">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.2.center/0.0.1366.728@0.0.1366.728" timestamp="1576458187425" />
-    <state width="1323" height="177" key="GridCell.Tab.2.left" timestamp="1576458187424">
+    <state width="901" height="216" key="GridCell.Tab.2.center/0.0.1366.728@0.0.1366.728" timestamp="1582621755744" />
+    <state width="901" height="216" key="GridCell.Tab.2.left" timestamp="1582621755743">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.2.left/0.0.1366.728@0.0.1366.728" timestamp="1576458187424" />
-    <state width="1323" height="177" key="GridCell.Tab.2.right" timestamp="1576458187425">
+    <state width="901" height="216" key="GridCell.Tab.2.left/0.0.1366.728@0.0.1366.728" timestamp="1582621755743" />
+    <state width="901" height="216" key="GridCell.Tab.2.right" timestamp="1582621755744">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state width="1323" height="177" key="GridCell.Tab.2.right/0.0.1366.728@0.0.1366.728" timestamp="1576458187425" />
+    <state width="901" height="216" key="GridCell.Tab.2.right/0.0.1366.728@0.0.1366.728" timestamp="1582621755744" />
     <state x="213" y="18" key="Maven.ArtifactSearchDialog" timestamp="1575508117412">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -445,18 +468,22 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="254" y="25" key="Registry/0.0.1366.728@0.0.1366.728" timestamp="1575531385347" />
-    <state x="52" y="52" width="1274" height="631" key="RollbackChangesDialog" timestamp="1576916925910">
+    <state x="52" y="52" width="1274" height="631" key="RollbackChangesDialog" timestamp="1581947823193">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="52" y="52" width="1274" height="631" key="RollbackChangesDialog/0.0.1366.728@0.0.1366.728" timestamp="1576916925910" />
-    <state x="184" y="0" key="SettingsEditor" timestamp="1578651789106">
+    <state x="52" y="52" width="1274" height="631" key="RollbackChangesDialog/0.0.1366.728@0.0.1366.728" timestamp="1581947823193" />
+    <state x="184" y="0" key="SettingsEditor" timestamp="1579503246179">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="184" y="0" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1578651789106" />
-    <state x="275" y="96" width="997" height="535" key="Vcs.Push.Dialog.v2" timestamp="1577949700323">
+    <state x="184" y="0" key="SettingsEditor/0.0.1366.728@0.0.1366.728" timestamp="1579503246179" />
+    <state x="275" y="96" width="997" height="535" key="Vcs.Push.Dialog.v2" timestamp="1579225609789">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="275" y="96" width="997" height="535" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1577949700323" />
+    <state x="275" y="96" width="997" height="535" key="Vcs.Push.Dialog.v2/0.0.1366.728@0.0.1366.728" timestamp="1579225609789" />
+    <state width="691" height="372" key="XDebugger.FullValuePopup" timestamp="1581999016221">
+      <screen x="0" y="0" width="1366" height="728" />
+    </state>
+    <state width="691" height="372" key="XDebugger.FullValuePopup/0.0.1366.728@0.0.1366.728" timestamp="1581999016221" />
     <state x="314" y="0" key="com.intellij.openapi.editor.actions.MultiplePasteAction$ClipboardContentChooser" timestamp="1575700750307">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -465,10 +492,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="454" y="81" key="com.intellij.testIntegration.createTest.CreateTestDialog/0.0.1366.728@0.0.1366.728" timestamp="1575463508199" />
-    <state x="167" y="99" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1578646441557">
+    <state x="167" y="99" width="1017" height="583" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2" timestamp="1582037634234">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="167" y="99" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1366.728@0.0.1366.728" timestamp="1578646441557" />
+    <state x="167" y="99" width="1017" height="583" key="com.intellij.xdebugger.impl.breakpoints.ui.BreakpointsDialogFactory$2/0.0.1366.728@0.0.1366.728" timestamp="1582037634234" />
     <state x="290" y="69" width="963" height="590" key="find.popup" timestamp="1579096199629">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
@@ -477,10 +504,10 @@
       <screen x="0" y="0" width="1366" height="728" />
     </state>
     <state x="425" y="0" key="refactoring.ChangeSignatureDialog/0.0.1366.728@0.0.1366.728" timestamp="1575689513045" />
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1579109692991">
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup" timestamp="1582092532596">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
-    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1579109692991" />
+    <state x="346" y="49" width="672" height="678" key="search.everywhere.popup/0.0.1366.728@0.0.1366.728" timestamp="1582092532596" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -506,9 +533,34 @@
           <option name="timeStamp" value="12" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/akz/ky/controller/SchoolController.java</url>
+          <line>55</line>
+          <option name="timeStamp" value="26" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/akz/ky/service/impl/SchoolServiceImpl.java</url>
+          <line>181</line>
+          <option name="timeStamp" value="31" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/test/java/com/akz/ky/KyApplicationTests.java</url>
-          <line>52</line>
-          <option name="timeStamp" value="13" />
+          <line>44</line>
+          <option name="timeStamp" value="33" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/akz/ky/service/impl/SchoolServiceImpl.java</url>
+          <line>190</line>
+          <option name="timeStamp" value="34" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/akz/ky/service/impl/SchoolServiceImpl.java</url>
+          <line>364</line>
+          <option name="timeStamp" value="38" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/akz/ky/service/impl/SchoolServiceImpl.java</url>
+          <line>380</line>
+          <option name="timeStamp" value="39" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-method">
           <url>file://$PROJECT_DIR$/src/main/java/com/akz/ky/controller/SecondCourseController.java</url>
