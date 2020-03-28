@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>考研信息交流平台</title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <script src="/vendor/jquery/jquery.min.js"></script>
+  <!-- Bootstrap CSS-->
+  <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.css">
+  <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+  <!-- Font Awesome CSS-->
+  <link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css">
+  <!-- Google fonts - Poppins-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,600">
+  <!-- Lightbox-->
+  <link rel="stylesheet" href="/vendor/lightbox2/css/lightbox.css">
+  <!-- Custom font icons-->
+  <link rel="stylesheet" href="/css/fontastic.css">
+  <!-- theme stylesheet-->
+  <link rel="stylesheet" href="/css/style.default.css" id="theme-stylesheet">
+  <!-- Custom stylesheet - for your changes-->
+  <link rel="stylesheet" href="/css/custom.css">
+  <!-- Favicon-->
+  <link rel="shortcut icon" href="/img/favicon.png">
+  <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+  <script src="/js/axios.min.js"></script>
+  <script src="/js/vue.min.js"></script>
+  <!-- JavaScript files-->
+  <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="/vendor/jquery.cookie/jquery.cookie.js"> </script>
+  <script src="/vendor/lightbox2/js/lightbox.js"></script>
+  <script src="/js/front.js"></script>
+
+</head>
+<body>
+<div id="workingArea" >
+  <div th:fragment="html">
+    <script type="text/javascript">
+      $(function(){
+        var data4Vue = {
+          uri:'initMajorIndex',
+
+        };
+        //ViewModel
+        var vue = new Vue({
+          el: '#workingArea',
+          data: data4Vue,
+          mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+            // this.load();
+          },
+          methods: {
+            load:function(){
+              console.log("进入方法...");
+              axios.post(this.uri).then(function(response) {
+                //为vue对象赋值
+                vue.majorTypes = response.data.majorTypes;
+                vue.firstCoursePojos = response.data.firstCoursePojos;
+                vue.majorIndexRequestLists = response.data.majorIndexRequestLists;
+                console.log("vue.majorIndexRequestLists:"+vue.majorIndexRequestLists);
+                vue.majorLength = vue.majorIndexRequestLists.length;
+                if (vue.majorLength <10){
+                  vue.AllPage = 1;
+                }else{
+                  if(vue.majorLength%10 == 0){
+                    vue.AllPage = vue.majorLength/10;
+                  }else{
+                    vue.AllPage = vue.majorLength/10 + 1;
+                  }
+                }
+                vue.currPage = 1;
+
+              });
+              $("#dom0").css({"display":"none"});
+              $("#dom1").css({"display":"none"});
+              console.log("退出方法...");
+            },
+
+          },
+          watch:{
+
+          }
+        });
+      });
+      Vue.filter("subStringFilter", function(value, start, end){
+        if (!value)
+          return '';
+        return value.substring(start,end);
+      });
+      // 解析地址栏中的参数
+      function getUrlParms(para){
+        var search=location.search; //页面URL的查询部分字符串
+        var arrPara=[]; //参数数组。数组单项为包含参数名和参数值的字符串，如“para=value”
+        var arrVal=[]; //参数值数组。用于存储查找到的参数值
+
+        if(search!=""){
+          var index=0;
+          search=search.substr(1); //去除开头的“?”
+          arrPara=search.split("&");
+
+          for(i in arrPara){
+            var paraPre=para+"="; //参数前缀。即参数名+“=”，如“para=”
+            if(arrPara[i].indexOf(paraPre)==0&& paraPre.length<arrPara[i].length){
+              arrVal[index]=decodeURI(arrPara[i].substr(paraPre.length)); //顺带URI解码避免出现乱码
+              index++;
+            }
+          }
+        }
+
+        if(arrVal.length==1){
+          return arrVal[0];
+        }else if(arrVal.length==0){
+          return null;
+        }else{
+          return arrVal;
+        }
+      }
+    </script>
+  </div>
+    <!-- navbar-->
+    <header class="header">
+      <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+          <!-- <a href="./" class="navbar-brand"><img src="img/logo.svg" alt="" class="img-fluid">考研信息交流平台</a> -->
+          <!-- <a href="#" >考研信息交流平台</a> -->
+          <h2>考研信息交流平台</h2>
+          <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="fa fa-bars ml-2"></i></button>
+          <div id="navbarSupportedContent" class="collapse navbar-collapse">
+            <ul class="navbar-nav ml-auto">
+                  <!-- Link-->
+                  <li class="nav-item"> <a href="index" class="nav-link active">首页</a></li>
+                  <!-- Link-->
+                  <li class="nav-item"> <a href="schoolIndex" class="nav-link">考研院校</a></li>
+                  <!-- Link-->
+                  <li class="nav-item"> <a href="majorIndex" class="nav-link">考研专业</a></li>
+                  <!-- Link-->
+                  <li class="nav-item"> <a href="schoolIndex" class="nav-link">论坛专区</a></li>
+                  <!-- Link-->
+                  <li class="nav-item"> <a href="contact" class="nav-link">视频专区</a></li>
+                  <!-- Link-->
+                  <li class="nav-item"> <a href="text.html" class="nav-link"></a></li>
+                  <li class="nav-item dropdown">
+                    <a id="pages" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">个人设置</a>
+                    <div class="dropdown-menu">
+                      <a href="majorIndex.html" class="dropdown-item">个人资料</a>
+                      <a href="contact.html" class="dropdown-item">退出登录</a>
+                      <a href="text.html" class="dropdown-item">未开发</a>
+                    </div>
+                  </li>
+            </ul>
+            <a href="#" data-toggle="modal" data-target="#login" class="btn btn-primary navbar-btn ml-0 ml-lg-3">登录 </a>
+            <a href="#" data-toggle="modal" data-target="#register" class="btn btn-success navbar-btn ml-0 ml-lg-3">注册 </a>
+
+          </div>
+        </div>
+      </nav>
+    </header>
+    <!-- Login Modal-->
+    <div id="login" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade bd-example-modal-lg">
+      <div role="document" class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header border-bottom-0">
+            <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-body p-4 p-lg-5">
+            <form action="/login" class="login-form text-left">
+              <div class="form-group mb-4">
+                <label>账号</label>
+                <input type="email" name="username" placeholder="请输入你的账号..." class="form-control">
+              </div>
+              <div class="form-group mb-4">
+                <label>密码</label>
+                <input type="password" name="password" placeholder="请输入你的密码..." class="form-control">
+              </div>
+              <div class="form-group">
+                <input type="submit" value="登录" class="btn btn-primary">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- register Modal-->
+    <div id="register" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade bd-example-modal-lg">
+      <div role="document" class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header border-bottom-0">
+            <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-body p-4 p-lg-5">
+            <form action="/register" class="login-form text-left">
+              <div class="form-group mb-4">
+                <label>账号</label>
+                <input type="email" name="userLoginName" placeholder="请输入你的账号..." class="form-control" maxlength="10">
+              </div>
+              <div class="form-group mb-4">
+                <label>用户名</label>
+                <input type="email" name="userName" placeholder="请输入你的用户名..." class="form-control" maxlength="10">
+              </div>
+              <div class="form-group mb-4">
+                <label>密码</label>
+                <input type="password" name="userLoginPassword" placeholder="请输入你的密码..." class="form-control" maxlength="10">
+              </div>
+              <div class="form-group mb-4">
+                <label>确认密码</label>
+<!--                <input type="password" name="repeatPwd" placeholder="请重复输入你的密码..." class="form-control" maxlength="10">-->
+              </div>
+              <div class="form-group mb-4">
+                <label>性别</label>
+                <input type="password" name="userSex" placeholder="请输入你的性别..." class="form-control" maxlength="1">
+              </div>
+              <div class="form-group mb-4">
+                <label>所在城市</label>
+                <input type="password" name="repeatPwd" placeholder="请输入你的所在城市" class="form-control" maxlength="11">
+              </div>
+              <div class="form-group mb-4">
+                <label>联系方式</label>
+                <input type="password" name="userContact" oninput="value=value.replace(/^[1][3,4,5,6,7,8,9][0-9]{9}$/,'')" placeholder="请输入你的联系方式(可选)" class="form-control" maxlength="11">
+              </div>
+              <div class="form-group mb-4">
+                <label>所在大学</label>
+                <input type="password" name="userSchoolName" placeholder="请输入你的大学" class="form-control" maxlength="9">
+              </div>
+              <div class="form-group mb-4">
+                <label>所在专业</label>
+                <input type="password" name="userMajorName" placeholder="请输入你的所在专业" class="form-control" maxlength="15">
+              </div>
+              <div class="form-group mb-4">
+                <label>目标院校</label>
+                <input type="password" name="userTagetSchoolName" placeholder="请输入你的目标院校(可选)" class="form-control" maxlength="9">
+              </div>
+              <div class="form-group mb-4">
+                <label>目标专业</label>
+                <input type="password" name="userTagetMajorlName" placeholder="请输入你的目标专业(可选)" class="form-control" maxlength="15">
+              </div>
+              <div class="form-group">
+                <input type="button" value="注册" class="btn btn-primary" @click="register">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Hero Section-->
+    <section class="hero">
+      <div class="container mb-5">
+        <div class="row align-items-center">
+          <div class="col-lg-6">
+            <h1 class="hero-heading mb-0">搜索 <br> 你的考研院校</h1>
+            <div class="row">
+              <div class="col-lg-10">
+                <p class="lead text-muted mt-4 mb-4">搜索你的考研院校</p>
+              </div>
+            </div>
+            <form action="/foresearch" method="get" class="subscription-form">
+              <div class="form-group">
+                <input type="text" name="keyword" id="keyword" placeholder="院校名称 / 院校代码 / 专业名称 / 专业代码" class="form-control">
+                <button type="submit" id="keywordButton" class="btn btn-primary">搜索目标院校</button>
+              </div>
+            </form>
+          </div>
+          <div class="col-lg-6"><img src="/img/illustration-hero.svg" alt="..." class="hero-image img-fluid d-none d-lg-block"></div>
+        </div>
+      </div>
+    </section>
+    <!-- 首页考研新闻热点-->
+    <section>
+      <div class="container">
+        <!-- wordPress installation-->
+        <header class="section header mb-5">
+          <h2>新闻摘要</h2>
+          <p class="lead">时下新闻快讯，摘自中国考研网</p>
+        </header>
+        <div class="row">
+          <div class="col-lg-8">
+            <div id="accordion" class="faq accordion accordion-custom pb-5">
+              <!-- question-->
+              <div class="card">
+                <div id="headingOne" class="card-header">
+                  <h4 class="mb-0 accordion-heading">
+                    <button data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne" class="d-flex align-items-center"><i class="icon-light-bulb"></i><span>2020考研国家线公布时间预测！</span></button>
+                  </h4>
+                </div>
+                <div id="collapseOne" aria-labelledby="headingOne" data-parent="#accordion" class="collapse show">
+                  <div class="card-body">&nbsp;&nbsp;&nbsp;&nbsp;根据官网回复的消息来看，3月20日以后国家线公布，具体时间呢？小编根据最近7年国家发布时间都是周二、周五这两天，小编预测国家线要么在3月20日当天公布、要么在3月24日公布。<br/><span style="color: black;font-weight: bold">调剂系统开通时间</span><br/>
+                    &nbsp;&nbsp;&nbsp;&nbsp;研招网的调剂系统此前传出3月中旬，不过大傻猜测很可能是学校网站运营小编的失误，直接把去年的时间原封不动拿到今年了。
+                    而据目前的信息显示：<span style="color: red">今年研招网调剂系统预计于4月1日开通！</span></div>
+                </div>
+              </div>
+              <!-- question        -->
+              <div class="card">
+                <div id="headingTwo" class="card-header">
+                  <h4 class="mb-0 accordion-heading">
+                    <button data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo" class="d-flex align-items-center collapsed"><i class="icon-plug"></i><span> 2020海南热带海洋学院2年全日制MTA调剂预报名</span></button>
+                  </h4>
+                </div>
+                <div id="collapseTwo" aria-labelledby="headingTwo" data-parent="#accordion" class="collapse">
+                  <div class="card-body">海南热带海洋学院是海南省全日制公办普通本科省属高校，是教育部十大“教育援外基地”之一，是国务院学位委员会“服务国家特殊需求人才培养项目”旅游管理硕士专业学位研究生培养试点单位和上海合作组织大学中方成员院校。学校建有三亚、五指山两个校区，校园总占地面积2200余亩，拥有全日制在校生近2万人。
+
+                    海南热带海洋学院旅游学院是海南最早培养旅游管理专业人才的基地，在人才培养、科学研究及产业服务等方面取得了辉煌成绩。目前拥有旅游管理省级重点（扶持）学科、省级特色专业、省级教学团队、省级精品课程、省级科研基地、省级研究生联合培养基地和国家本科专业综合改革试点项目等成果。
+
+                    自2012年12月海南热带海洋学院正式被批准为海南省首家旅游管理硕士专业学位试点单位以来，坚持以应用为导向，面向海南国际旅游岛建设以及服务国家特殊需求，围绕“海洋旅游、休闲度假旅游、文化旅游”三个方向，与企业、行业、国内外同行院校等建立战略联盟，产学融合，协同创新，联合培养国际化、应用型、高层次的复合型旅游管理人才。迄今为止我校MTA中心已有3个案例入选全国MTA优秀教学案例，成功申报11项国家旅游局（现为国家文旅部）研究生研究型项目，37项海南省研究生创新科研课题，成效显著。
+
+                    MTA教育中心通过校外聘请和校内选拔两种方式，聘请在国内外具有广泛影响，享有崇高声望的著名学者、教授、行业精英任课，讲授核心课程。同时聘请20多位5A景区、5星级酒店、知名旅行社总经理以及政府相关部门专家兼任行业导师，构建了精品型、实战型、区域型、国际化的授课团队，为MTA学员提供业界优质的教育平台。
+
+                    MTA教育中心已与海南省5A级景区槟榔谷黎苗文化旅游区合作成功建立海南省专业学位研究生联合培养基地。并围绕休闲度假旅游、海洋旅游和文化旅游3个培养方向，精选出包括酒店、旅行社、邮轮游艇公司、海洋研究开发单位、文化旅游景区/点、旅游行业主管部门、旅游行业学会等在内的共20多个校外实践教学基地，初步建立了师生与行业企业专家共同参与的合作研发式的校企合作育人机制。多名MTA学员远赴哈萨克斯坦进行交流学习。
+
+                    MTA教育实施小班授课，并配有先进的教学仪器设备为学员和教师提供了高层次的学习和交流场所。学校建成了酒店餐饮模拟实训室、客房模拟实训室、饭店信息化实验室及MTA图书阅览室，为MTA理论与实践教学的结合提供了充足的校内实践教学条件。
+
+                    <br/>一、调剂预报名要求
+
+                    1.报考全日制的“1254旅游管理”专业学位硕士（专硕总分300，不接收总分500的学硕调剂）
+
+                    2.符合教育部规定的MTA报考条件（满足至少三年工作年限，非应届生）；
+
+                    3.只接收管理类联考考生调剂（我校全日制学制2年）；
+
+                    4.总分不低于155分；
+
+                    <br/>二、调剂办法
+
+                    1.请符合条件的考生填写“海南热带海洋学院旅游学院2020年接收硕士研究生调剂预报名申请表”，发送邮件至qzumta@163.com，申请表以“调剂专业+初试总分+考生编号”命名。
+
+                    2.欲调剂考生须及时关注海南热带海洋学院研究生处网站调剂流程通知并按要求进行操作。
+
+                    3.具体复试时间、内容和程序等请及时关注海南热带海洋学院研究生处网站通知。
+
+                    <br/>三、联系方式
+
+                    电子邮箱：qzumta@163.com   （每封填表邮件都会得到回复）</div>
+                </div>
+              </div>
+              <!-- question-->
+              <div class="card">
+                <div id="headingThree" class="card-header">
+                  <h4 class="mb-0 accordion-heading">
+                    <button data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree" class="d-flex align-items-center collapsed"><i class="icon-shield-settings"></i><span>2021考研公共课在线网课 随时试听</span></button>
+                  </h4>
+                </div>
+                <div id="collapseThree" aria-labelledby="headingThree" data-parent="#accordion" class="collapse">
+                  <div class="card-body">2021考研复习很多同学都已经开始了，你的复习计划列好了吗？要想有好的复习效果，好的规划是必不可少的。而辅导网课一般都有系统规划复习，对应很多英语和数学基础本来就不是很扎实的同学来说，无疑是一大帮助。小编整理了考研公共课复习网课，列举如果，希望对大家有帮助！</div>
+                </div>
+              </div>
+              <!-- question            -->
+              <div class="card">
+                <div id="headingFour" class="card-header">
+                  <h4 class="mb-0 accordion-heading">
+                    <button data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour" class="d-flex align-items-center collapsed"><i class="icon-stack-of-sheets"></i><span>专业学位与学术学位的区别</span></button>
+                  </h4>
+                </div>
+                <div id="collapseFour" aria-labelledby="headingFour" data-parent="#accordion" class="collapse">
+                  <div class="card-body">简单明确地说 专业学位与学术型学位处于同一层次，培养规格各有侧重，在培养目标上有明显差异：学术型学位按学科设立，其以学术研究为导向，偏重理论和研究，培养大学教师和科研机构的研究人员；而专业学位以专业实践为导向，重视实践和应用，培养在专业和专门技术上受到正规的、高水平训练的高层次人才。学术型研究生学制一般三年，专业学位研究生学制一般两年。海文考研</div>
+                </div>
+              </div>
+            </div>
+            <!-- troubleshooting-->
+            <header class="section-header text-left mb-5 mt-5">
+              <h2 class="mt-5">考研答疑</h2>
+<!--              <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>-->
+            </header>
+            <div id="accordion2" class="faq accordion accordion-custom">
+              <!-- question-->
+              <div class="card">
+                <div id="headingOneAlt" class="card-header">
+                  <h4 class="mb-0 accordion-heading">
+                    <button data-toggle="collapse" data-target="#collapseOneAlt" aria-expanded="false" aria-controls="collapseOneAlt" class="d-flex align-items-center collapsed"><i class="icon-light-bulb"></i><span>听说从14年开始了研究生没有公费了啊，全部自费了，那学费一般多少啊，学硕和专硕差得多吗？</span></button>
+                  </h4>
+                </div>
+                <div id="collapseOneAlt" aria-labelledby="headingOneAlt" data-parent="#accordion2" class="collapse">
+                  <div class="card-body">从14年开始全部实行自费+奖学金制度。全日制学术型硕士研究生的学费标准，现阶段按照每生每学年不超过8000元确定。专硕的学费还跟以前一样，看学校了。</div>
+                </div>
+              </div>
+              <!-- question-->
+              <div class="card">
+                <div id="headingTwoAlt" class="card-header">
+                  <h4 class="mb-0 accordion-heading">
+                    <button data-toggle="collapse" data-target="#collapseTwoAlt" aria-expanded="false" aria-controls="collapseTwoAlt" class="d-flex align-items-center collapsed"><i class="icon-plug"></i><span>在查考研成绩的时候，在网上看到很多人在说考研调剂，考研调剂是什么，是不是参加考研的，都可以申请调剂？</span></button>
+                  </h4>
+                </div>
+                <div id="collapseTwoAlt" aria-labelledby="headingTwoAlt" data-parent="#accordion2" class="collapse">
+                  <div class="card-body">简单的说,就是你们没有被所报考院校录取,而成绩等条件满足另一有空缺位置的学校,你若有意愿,就和该校联系,填个调剂申请表,所报院校把你的资料转给要调剂的学校,你接受该校的审核,通过即被录取.
+                    调剂原则就是三个,首先,你没有被报考校录取(这是大前提,人家要你,你不愿意去,无权调剂),再有,要调剂的目标校有空缺且你满足该校的要求(就包括国家线和该校该专业的其他要求).只要满求三个条件就可以调剂,B区调剂到A去都行.
+                    调剂成功的关键也就是早动手早联系,一般应该是先校内调剂,调剂到其他有空缺的专业,不行,再调剂到外校.可以问问报的学校历年通常都有哪些经常调剂的&amp;quot;对口学校&amp;quot;,或者问问有经验的学长,早动手,积极联系,调剂成功并不难.其实你的成绩过了国家线,有意愿一定要上个研,那就一定有学校可上.大概就知道这些了,希望对你有帮助.
+                  </div>
+                </div>
+              </div>
+              <!-- question-->
+              <div class="card">
+                <div id="headingThreeAlt" class="card-header">
+                  <h4 class="mb-0 accordion-heading">
+                    <button data-toggle="collapse" data-target="#collapseThreeAlt" aria-expanded="false" aria-controls="collapseThreeAlt" class="d-flex align-items-center collapsed"><i class="icon-shield-settings"></i><span>教育学专业考研前景怎么样</span></button>
+                  </h4>
+                </div>
+                <div id="collapseThreeAlt" aria-labelledby="headingThreeAlt" data-parent="#accordion2" class="collapse">
+                  <div class="card-body">百年大计，教育为本  很好,普通高校、中小学校 特殊教育机构、出版社、报社、.政府单位、新技术教育领域。同时，教育学硕士毕业也可以进入教育研究机构、教育辅导机构，特别是几年来教育培训行业飞速发展、自己创业，创办学校，宣传自己的教育理念等等。 考研前景还是不错的，加油。</div>
+                </div>
+              </div>
+              <!-- question-->
+              <div class="card">
+                <div id="headingFourAlt" class="card-header">
+                  <h4 class="mb-0 accordion-heading">
+                    <button data-toggle="collapse" data-target="#collapseFourAlt" aria-expanded="false" aria-controls="collapseFourAlt" class="d-flex align-items-center collapsed"><i class="icon-stack-of-sheets"></i><span>我是历史专业的 想要考研 但不太想考历史 所以请告诉我所有不需要考数学的专业</span></button>
+                  </h4>
+                </div>
+                <div id="collapseFourAlt" aria-labelledby="headingFourAlt" data-parent="#accordion2" class="collapse">
+                  <div class="card-body">基本上就只有语言类，人文，和传媒类，不需要考数学，是在不行，你考经济类，数三也不是特别难</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- sidebar-->
+          <aside class="sidebar col-lg-4 mt-5 mt-lg-0">
+            <div class="search mb-4">
+              <form action="#" class="search-form">
+                <div class="form-group">
+                  <input type="search" name="search" placeholder="搜索目标院校" class="form-control">
+                  <button type="submit"> <i class="fa fa-search"></i></button>
+                </div>
+              </form>
+            </div>
+            <div class="sidebar-widget mb-4">
+              <h4 class="sidebar-widget-heading">2021考研公共课在线网课 随时试听</h4>
+              <ul class="list-unstyled pl-0 mt-4">
+                <li> <a href="http://www.chinakaoyan.com/xindongfang/detail/3433.shtml" class="categories-link">2021考研英语进阶全程班 长线备考4班 (一、二可选）</a></li>
+                <li><a href="http://www.chinakaoyan.com/xindongfang/detail/3445.shtml" class="categories-link">2021考研英语零基础进阶全程班 寒假班（一 二可选）</a></li>
+                <li><a href="http://www.chinakaoyan.com/xindongfang/detail/3187.shtml" class="categories-link">2021考研数学零基础进阶全程班（全面提分版）长线备考2班</a></li>
+                <li><a href="http://www.chinakaoyan.com/xindongfang/detail/3427.shtml" class="categories-link">2021考研数学进阶全程班（普通版）长线备考2班</a></li>
+                <li><a href="http://www.chinakaoyan.com/xindongfang/detail/3431.shtml" class="categories-link">2021考研政治进阶全程班 长线备考2班</a></li>
+              </ul>
+            </div>
+            <div class="sidebar-widget">
+              <h4 class="sidebar-widget-heading">标签</h4>
+              <ul class="list-inline pl-0 mt-4">
+                <li class="list-inline-item mr-0"><a href="#" class="tag-link">疫情</a></li>
+                <li class="list-inline-item mr-0"><a href="#" class="tag-link">考研名嘴张雪峰</a></li>
+                <li class="list-inline-item mr-0"><a href="#" class="tag-link">数一怎么复习？</a></li>
+                <li class="list-inline-item mr-0"><a href="#" class="tag-link">考研压力大</a></li>
+                <li class="list-inline-item mr-0"><a href="#" class="tag-link">高效备战</a></li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+    <!-- Intro Section-->
+    <section>
+      <div class="container">
+        <div class="text-center">
+          <h2>Track projects from start to finish </h2>
+          <p class="lead text-muted mt-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod.</p><a href="#" class="btn btn-primary">Learn More</a>
+        </div>
+        <div class="row">
+          <div class="col-lg-7 mx-auto mt-5"><img src="img/illustration-1.svg" alt="..." class="intro-image img-fluid"></div>
+        </div>
+      </div>
+    </section>
+    <!-- Divider Section-->
+    <section class="bg-primary text-white">
+      <div class="container">
+        <div class="text-center">
+          <h2>Do great things together</h2>
+          <div class="row">
+            <div class="col-lg-9 mx-auto">
+              <p class="lead text-white mt-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor. eiusmod tempor incididunt ut labore et dolore.</p>
+            </div>
+          </div><a href="#" class="btn btn-outline-light">Learn More</a>
+        </div>
+      </div>
+    </section>
+    <!-- Integrations Section-->
+    <section>
+      <div class="container">
+        <div class="text-center">
+          <h2>Integrations</h2>
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <p class="lead text-muted mt-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod. eiusmod tempor incididunt ut labore.</p>
+            </div>
+          </div>
+        </div>
+        <div class="integrations mt-5">
+          <div class="row">
+            <div class="col-lg-4">
+              <div class="box text-center">
+                <div class="icon d-flex align-items-end"><img src="img/monitor.svg" alt="..." class="img-fluid"></div>
+                <h3 class="h4">Web desgin</h3>
+                <p class="text-small font-weight-light">Lorem Ipsum has been the industry's standard dummy text ever.</p>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="box text-center">
+                <div class="icon d-flex align-items-end"><img src="img/target.svg" alt="..." class="img-fluid"></div>
+                <h3 class="h4">Print</h3>
+                <p class="text-small font-weight-light">Lorem Ipsum has been the industry's standard dummy text ever.</p>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="box text-center">
+                <div class="icon d-flex align-items-end"><img src="img/chat.svg" alt="..." class="img-fluid"></div>
+                <h3 class="h4">SEO and SEM</h3>
+                <p class="text-small font-weight-light">Lorem Ipsum has been the industry's standard dummy text ever.</p>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="box text-center">
+                <div class="icon d-flex align-items-end"><img src="img/idea.svg" alt="..." class="img-fluid"></div>
+                <h3 class="h4">Consulting</h3>
+                <p class="text-small font-weight-light">Lorem Ipsum has been the industry's standard dummy text ever.</p>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="box text-center">
+                <div class="icon d-flex align-items-end"><img src="img/coffee-cup.svg" alt="..." class="img-fluid"></div>
+                <h3 class="h4">Email Marketing</h3>
+                <p class="text-small font-weight-light">Lorem Ipsum has been the industry's standard dummy text ever.</p>
+              </div>
+            </div>
+            <div class="col-lg-4">
+              <div class="box text-center">
+                <div class="icon d-flex align-items-end"><img src="img/pen.svg" alt="..." class="img-fluid"></div>
+                <h3 class="h4">UX &amp; UI</h3>
+                <p class="text-small font-weight-light">Lorem Ipsum has been the industry's standard dummy text ever.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- CLients Section-->
+    <section class="bg-gray">
+      <div class="container">
+        <div class="text-center">
+          <h2>Trusted by teams everywhere</h2>
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <p class="lead text-muted mt-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit. sed do eiusmod tempor incididunt..</p>
+            </div>
+          </div>
+        </div>
+        <div class="clients mt-5">
+          <div class="row">
+            <div class="col-lg-2"><img src="img/client-1.svg" alt="" class="client-image img-fluid"></div>
+            <div class="col-lg-2"><img src="img/client-2.svg" alt="" class="client-image img-fluid"></div>
+            <div class="col-lg-2"><img src="img/client-3.svg" alt="" class="client-image img-fluid"></div>
+            <div class="col-lg-2"><img src="img/client-4.svg" alt="" class="client-image img-fluid"></div>
+            <div class="col-lg-2"><img src="img/client-5.svg" alt="" class="client-image img-fluid"></div>
+            <div class="col-lg-2"><img src="img/client-6.svg" alt="" class="client-image img-fluid"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- How it works section-->
+    <section>
+      <div class="container">
+        <div class="text-center">
+          <h2>Curious how Appton works for <br>large organizations?</h2>
+          <div class="row">
+            <div class="col-lg-8 mx-auto">
+              <p class="lead text-muted mt-2">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod. Eiusmod tempor incididunt ut labore.</p>
+            </div>
+          </div><a href="#" class="btn btn-primary mt-4">Get Started</a>
+        </div>
+      </div>
+    </section>
+    <!-- How it works Section-->
+    <section class="bg-gray">
+      <div class="container text-center text-lg-left">
+        <div class="row align-items-center">
+          <div class="col-lg-7">
+            <h2 class="divider-heading">Curious how Appton <br>works for large</h2>
+            <div class="row">
+              <div class="col-lg-10">
+                <p class="lead divider-subtitle mt-2 text-muted">Lorem ipsum dolor sit amet, consectetur adipisicing. Vitae animi mollitia cumque sunt soluta. consectetur adipisicing.</p>
+              </div>
+            </div><a href="#" class="btn btn-primary">Learn More</a>
+          </div>
+          <div class="col-lg-5 mt-5 mt-lg-0"><img src="img/illustration-2.svg" alt="" class="divider-image img-fluid"></div>
+        </div>
+      </div>
+    </section>
+    <!-- Portfolio Section-->
+    <section class="pb-0">
+      <div class="container">
+        <div class="text-center">
+          <h2>Portfolio</h2>
+          <p class="lead text-muted mt-2">You can make also a portfolio or image gallery.</p>
+        </div>
+        <div class="portfolio mt-5">
+          <div class="row">
+            <div class="col-lg-4 p-0"><a href="img/portfolio-1.jpg" data-lightbox="image-1" data-title="Some footer information" class="portfolio-item"><img src="img/portfolio-1.jpg" alt="image" class="img-fluid"></a></div>
+            <div class="col-lg-4 p-0"><a href="img/portfolio-2.jpg" data-lightbox="image-1" data-title="Some footer information" class="portfolio-item"><img src="img/portfolio-2.jpg" alt="image" class="img-fluid"></a></div>
+            <div class="col-lg-4 p-0"><a href="img/portfolio-3.jpg" data-lightbox="image-1" data-title="Some footer information" class="portfolio-item"><img src="img/portfolio-3.jpg" alt="image" class="img-fluid"></a></div>
+            <div class="col-lg-4 p-0"><a href="img/portfolio-4.jpg" data-lightbox="image-1" data-title="Some footer information" class="portfolio-item"><img src="img/portfolio-4.jpg" alt="image" class="img-fluid"></a></div>
+            <div class="col-lg-4 p-0"><a href="img/portfolio-5.jpg" data-lightbox="image-1" data-title="Some footer information" class="portfolio-item"><img src="img/portfolio-5.jpg" alt="image" class="img-fluid"></a></div>
+            <div class="col-lg-4 p-0"><a href="img/portfolio-6.jpg" data-lightbox="image-1" data-title="Some footer information" class="portfolio-item"><img src="img/portfolio-6.jpg" alt="image" class="img-fluid"></a></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Get Started Section-->
+    <section class="get-started">
+      <div class="container text-center">
+        <h2>Get started today</h2>
+        <div class="row">
+          <div class="col-lg-8 m-auto">
+            <p class="lead text-muted mt-2">If you can make a list or send an email, you can use Appton. Lorem ipsum dolor sit amet, consectetur adipisicing.</p>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-6 mx-auto">
+            <form action="#" class="subscription-form mt-5">
+              <div class="form-group">
+                <input type="email" name="email" placeholder="Name@company.com" class="form-control">
+                <button type="submit" class="btn btn-primary">Get Started</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+    <footer class="main-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 mb-5 mb-lg-0">
+            <div class="footer-logo"><img src="img/logo-footer.svg" alt="..." class="img-fluid"></div>
+          </div>
+          <div class="col-lg-3 mb-5 mb-lg-0">
+            <h5 class="footer-heading">Site pages</h5>
+            <ul class="list-unstyled">
+              <li> <a href="index.html" class="footer-link">Home</a></li>
+              <li> <a href="majorIndex.html" class="footer-link">FAQ</a></li>
+              <li> <a href="contact.html" class="footer-link">Contact</a></li>
+              <li> <a href="text.html" class="footer-link">Text Page</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 mb-5 mb-lg-0">
+            <h5 class="footer-heading">Product</h5>
+            <ul class="list-unstyled">
+              <li> <a href="#" class="footer-link">Why Appton?</a></li>
+              <li> <a href="#" class="footer-link">Enterprise</a></li>
+              <li> <a href="#" class="footer-link">Blog</a></li>
+              <li> <a href="#" class="footer-link">Pricing</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3">
+            <h5 class="footer-heading">Resources</h5>
+            <ul class="list-unstyled">
+              <li> <a href="#" class="footer-link">Download</a></li>
+              <li> <a href="#" class="footer-link">Help Center</a></li>
+              <li> <a href="#" class="footer-link">Guides</a></li>
+              <li> <a href="#" class="footer-link">Partners</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="copyrights">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6 text-center text-lg-left">
+              <p class="copyrights-text mb-3 mb-lg-0">&copy; All rights reserved. Appton.co. Bootstrapious .More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+              
+              
+            </div>
+            <div class="col-lg-6 text-center text-lg-right">
+              <ul class="list-inline social mb-0">
+                <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-facebook"></i></a><a href="#" class="social-link"><i class="fa fa-twitter"></i></a><a href="#" class="social-link"><i class="fa fa-youtube-play"></i></a><a href="#" class="social-link"><i class="fa fa-vimeo"></i></a><a href="#" class="social-link"><i class="fa fa-pinterest"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+  <!-- JavaScript files-->
+<!--  <script src="/vendor/jquery/jquery.min.js"></script>-->
+<!--  <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>-->
+  <script src="/vendor/jquery.cookie/jquery.cookie.js"> </script>
+<!--  <script src="/vendor/lightbox2/js/lightbox.js"></script>-->
+  <script src="/js/front.js"></script>
+  </div>
+</body>
+</html>

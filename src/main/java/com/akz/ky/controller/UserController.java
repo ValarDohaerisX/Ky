@@ -30,46 +30,46 @@ public class UserController {
 
     @PostMapping("login")
     public String login(@RequestBody UserPojo userPojo, HttpServletRequest request){
-        UserPojo user = userService.get(userPojo.getName());
-        if (!user.getPassword().equals("")&&user.getPassword().equals(userPojo.getPassword())){
-            HttpSession session = request.getSession();
-//            user.setActivity();
-            List<ActivityPojo> list = ActivityServiceImpl.list;
-            for (ActivityPojo ap:list) {
-                if (user.getActivity()<ap.getLevel()){
-                    user.setBadge(ap.getName());
-                    break;
-                }
-                }
-            user.setRegTime(new Timestamp(System.currentTimeMillis()));
-            user.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
-            session.setAttribute("user",user);
-            return "login";
-        }
+//        UserPojo user = userService.get(userPojo.getName());
+//        if (!user.getPassword().equals("")&&user.getPassword().equals(userPojo.getPassword())){
+//            HttpSession session = request.getSession();
+////            user.setActivity();
+//            List<ActivityPojo> list = ActivityServiceImpl.list;
+//            for (ActivityPojo ap:list) {
+//                if (user.getActivity()<ap.getLevel()){
+//                    user.setBadge(ap.getName());
+//                    break;
+//                }
+//                }
+//            user.setRegTime(new Timestamp(System.currentTimeMillis()));
+//            user.setLastLoginTime(new Timestamp(System.currentTimeMillis()));
+//            session.setAttribute("user",user);
+//            return "login";
+//        }
         return "";
     }
     @PostMapping("register")
     public String register(@RequestBody UserPojo userPojo){
-        if (userPojo == null)
-            return "输入错误，请重新输入";
-        UserPojo user = userService.get(userPojo.getName());
-        if(user == null){
-            userPojo.setUserType("1");
-            userPojo.setUserPemission(1);
-            userPojo.setActivity(0);
-            List<ActivityPojo> list = ActivityServiceImpl.list;
-            for (ActivityPojo ap:list) {
-                if (userPojo.getActivity()<ap.getLevel()){
-                    userPojo.setBadge(ap.getName());
-                    break;
-                }
-            }
-            userPojo.setRegTime(new Timestamp(System.currentTimeMillis()));
-            userService.add(userPojo);
-
-        }else {
-            return "用户已存在";
-        }
+//        if (userPojo == null)
+//            return "输入错误，请重新输入";
+//        UserPojo user = userService.get(userPojo.getName());
+//        if(user == null){
+//            userPojo.setUserType("1");
+//            userPojo.setUserPemission(1);
+//            userPojo.setActivity(0);
+//            List<ActivityPojo> list = ActivityServiceImpl.list;
+//            for (ActivityPojo ap:list) {
+//                if (userPojo.getActivity()<ap.getLevel()){
+//                    userPojo.setBadge(ap.getName());
+//                    break;
+//                }
+//            }
+//            userPojo.setRegTime(new Timestamp(System.currentTimeMillis()));
+//            userService.add(userPojo);
+//
+//        }else {
+//            return "用户已存在";
+//        }
 
         return "";
     }
