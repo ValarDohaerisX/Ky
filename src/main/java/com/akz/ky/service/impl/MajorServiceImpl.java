@@ -7,6 +7,7 @@ import com.akz.ky.mapper.SecondCourseMapper;
 import com.akz.ky.message.ApiReturnCode;
 import com.akz.ky.message.Result;
 import com.akz.ky.pojo.FirstCoursePojo;
+import com.akz.ky.pojo.MajorIndexRequestPojo;
 import com.akz.ky.pojo.MajorPojo;
 import com.akz.ky.pojo.SecondCoursePojo;
 import com.akz.ky.service.MajorService;
@@ -61,6 +62,12 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
+    public Result<List<MajorPojo>> getMajorBySchoolNo(int schoolNo) {
+        List<MajorPojo> bySchoolNo = majorMapper.getBySchoolNo(schoolNo);
+        return Result.success(bySchoolNo);
+    }
+
+    @Override
     public Result updateMajor(MajorPojo majorPojo) {
         if (majorPojo == null){
             return Result.failure(ApiReturnCode.C_Fail_Update,"获取不到需更新的专业信息，请检查异常.");
@@ -80,6 +87,29 @@ public class MajorServiceImpl implements MajorService {
         if (!flag)
             return Result.failure(ApiReturnCode.C_Fail_Delete);
         return Result.success(flag);
+    }
+
+    @Override
+    public Result<MajorPojo> getByMajorCode(String majorCode) {
+        MajorPojo majorPojo = majorMapper.getByMajorCode(majorCode).get(0);
+        return Result.success(majorPojo);
+    }
+
+    @Override
+    public Result<MajorPojo> getByMajorName(String majorName) {
+        MajorPojo byMajorName = majorMapper.getByMajorName(majorName);
+        return Result.success(byMajorName);
+    }
+
+    @Override
+    public Result<List<MajorPojo>> getAll() {
+        List<MajorPojo> majorPojos = majorMapper.getAll();
+        return Result.success(majorPojos);
+    }
+
+    @Override
+    public List<MajorIndexRequestPojo> majorIndexRequest() {
+        return majorMapper.majorIndexRequest();
     }
 
     public void fill(MajorPojo majorPojo){

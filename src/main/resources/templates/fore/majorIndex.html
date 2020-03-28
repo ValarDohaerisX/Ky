@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>考研信息交流平台</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="/vendor/font-awesome/css/font-awesome.min.css">
+    <!-- Google fonts - Poppins-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,600">
+    <!-- Lightbox-->
+    <link rel="stylesheet" href="/vendor/lightbox2/css/lightbox.css">
+    <!-- Custom font icons-->
+    <link rel="stylesheet" href="/css/fontastic.css">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="/css/style.default.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="/css/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="/img/favicon.png">
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/vue.min.js"></script>
+    <!-- JavaScript files-->
+    <script src="/vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="/vendor/lightbox2/js/lightbox.js"></script>
+        <script src="/js/front.js"></script>
+
+</head>
+<body>
+<div id="workingArea" >
+    <div th:fragment="html">
+        <script type="text/javascript">
+            $(function(){
+                var data4Vue = {
+                    uri:'initMajorIndex',
+                    majorTypes:[],
+                    firstCoursePojos:[],
+                    majorIndexRequestLists:[],
+                    address:[],
+                    schoolLevels:[],
+                    keyword:'',
+                    schools:[],
+                    showAll:true,
+                    showPart:false,
+                    showMutlSel:false,
+                    dom0:'',
+                    dom1:'',
+                    dom2:'',
+                    showCity:false,
+                    showType:false,
+                    displaySChoolFlag:true,
+                    displaySChoolTJ:'a',
+                    showAll:false,
+                    majorLength:0,
+                    currPage:0,
+                    AllPage:0,
+                };
+                //ViewModel
+                var vue = new Vue({
+                    el: '#workingArea',
+                    data: data4Vue,
+                    mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                        this.load();
+                    },
+                    methods: {
+                        load:function(){
+                            console.log("进入方法...");
+                            axios.post(this.uri).then(function(response) {
+                                //为vue对象赋值
+                                vue.majorTypes = response.data.majorTypes;
+                                vue.firstCoursePojos = response.data.firstCoursePojos;
+                                vue.majorIndexRequestLists = response.data.majorIndexRequestLists;
+                                console.log("vue.majorIndexRequestLists:"+vue.majorIndexRequestLists);
+                                vue.majorLength = vue.majorIndexRequestLists.length;
+                                if (vue.majorLength <10){
+                                    vue.AllPage = 1;
+                                }else{
+                                    if(vue.majorLength%10 == 0){
+                                        vue.AllPage = vue.majorLength/10;
+                                    }else{
+                                        vue.AllPage = vue.majorLength/10 + 1;
+                                    }
+                                }
+                                vue.currPage = 1;
+
+                            });
+                            $("#dom0").css({"display":"none"});
+                            $("#dom1").css({"display":"none"});
+                            console.log("退出方法...");
+                        },
+                        search:function (type,value) {
+                            // console.log("type:"+type+"\tvalue:"+value);
+                            var key = this.keyword;
+                            var switchPage = this.$refs.switchPage.innerHTML;
+                            if('搜学校' == switchPage){
+                                var schools = [];
+                                var ss = [];
+                                for (let i = 0; i <vue.schoolPojos.length; i++) {
+                                    var school = vue.schoolPojos[i];
+                                    if (school.schoolName.indexOf(key)!=-1||school.schoolCode.indexOf(key)!=-1){
+                                        schools.push(school);
+                                    }
+                                    if (type!=null&&value!=null){
+                                        if (value==school.schoolType||value==school.address){
+                                            schools.push(school);
+                                        }
+                                    }
+                                }
+                                vue.schools = schools;
+                                vue.showAll = false;
+                                vue.showPart = true;
+                            }else if('查专业' == switchPage){
+                                if (''==key){
+                                    var url = "/majorIndex";
+                                    console.log('key:'+key);
+                                    console.log('this.$router:'+this.$router);
+                                    this.$router.push('/majorIndex');
+                                    // this.$router.p
+                                    this.$options.methods.redierct();
+                                    // window.location.href="/majorIndex";
+                                    // axios.get(url).then(function(response) {
+                                    //     //do nothing
+                                    // });
+                                }else {
+                                    console.log("key:"+key);
+                                    var searchMajor = [];
+                                    for (let i = 0; i < vue.majorIndexRequestLists.length ; i++) {
+                                        var major = majorIndexRequestLists[i].ZSMajor;
+                                        if (major.majorCode.indexOf(key)!=-1||major.majorName.indexOf(key)!=-1){
+                                            searchMajor.push(majorIndexRequestLists[i]);
+                                        }
+                                        if (type!=null&&value!=null){
+                                            if (value==major.majorType||major.firstCourseName.indexOf(value)!=-1){
+                                                schools.push(school);
+                                            }
+                                        }
+                                    }
+                                    vue.majorIndexRequestLists = searchMajor;
+                                }
+                            }
+                        },
+                        //操作多选项
+                        // opearteDom0:function (e) {
+                        //     this.showMutlSel = false;
+                        //     // let addressCode = this.$refs.addresscode.dataset.value;
+                        //     var addressCode = e.target.getAttribute('value');
+                        //     // console.log("0addressCode:"+addressCode);
+                        //     var addressName = e.target.innerHTML;
+                        //     this.dom0 = addressName;
+                        // },
+                        // opearteDom1:function (e) {//往多重复选框添加院校省份
+                        //     // let addressCode = this.$refs.addresscode.dataset.value;
+                        //     // var addressCode = e.target.getAttribute('value');
+                        //     // e.target().parent()
+                        //     // console.log("1addressCode:"+addressCode);
+                        //     // console.log("1addressName:"+e.target.innerHTML);
+                        //     var addressName = e.target.innerHTML;
+                        //     this.dom1 = addressName;
+                        //     this.showMutlSel = true;
+                        //     this.showCity = true;
+                        //     this.$options.methods.search('address',addressName);
+                        // },
+                        // opearteDom2:function (e) {//往多重复选框添加院校类型
+                        //     this.showMutlSel = true;
+                        //     // let addressCode = this.$refs.addresscode.dataset.value;
+                        //     // var addressCode = e.target.getAttribute('value');
+                        //     // console.log("2addressCode:"+addressCode);
+                        //     var typeName = e.target.innerHTML;
+                        //     this.dom2 = typeName;
+                        //     this.showMutlSel = true;
+                        //     this.showType = true;
+                        //     this.$options.methods.search('type',typeName);
+                        //     // console.log("this.schools:"+JSON.stringify(this.schools));
+                        // },
+                        displaySChool:function(e){ //切换专业表头（显示与隐藏）
+                            console.log("displaySChool。。。");
+
+                            var majorcode = e.target.getAttribute('value');
+                            var id = $("div.yxshow[id='"+majorcode+"']").attr("id");
+                            $("div.yxshow[id='"+majorcode+"']").toggle();
+
+                            var src = $("img[id='"+majorcode+"']").attr("src");
+                            if ("/img/jtx.jpg"==src){
+                                $("img[id='"+majorcode+"']").attr("src","/img/jts.jpg");
+                                $("div.sline-li[id='"+majorcode+"']").css({"background":"#f0f0f0","color":"#333"});
+                            }else{
+                                $("img[id='"+majorcode+"']").attr("src","/img/jtx.jpg");
+                                $("div.sline-li[id='"+majorcode+"']").css({"background":"#dbeefd","color":"#3399cc"});
+                            }
+                            console.log("id:"+id);
+                            console.log("majorcode:"+majorcode);
+
+                        },
+                        selectMajor:function(e){
+                            var code = e.target.getAttribute('value');
+                            console.log("code:"+code);
+                            var t = $("div.xiahuaxian[id='"+code+"']").attr("type");
+                            var value = $("div.xiahuaxian[id='"+code+"']").text();
+                            console.log("value:"+value);
+                            vue.showAll = true;
+                            if ("majorType0"==t){//专业类型
+                                vue.dom0 = value;
+                                $("#dom0").toggle();
+                            }else if("majorType1"==t){//学科门类
+                                vue.dom1 = value;
+                                $("#dom1").toggle();
+
+                            }
+                            this.$options.methods.search('type',value);
+                            console.log("t:"+t);
+
+                        },
+                        canclSel0:function(e){//隐藏专业类型
+                            vue.dom0 = '';
+                            $("#dom0").css({"display":"none"});
+                            // var addressName = this.dom1;
+                            // var typeName = this.dom2;
+                            // this.showCity = false;
+                            // this.dom1 = '';
+                            // this.$options.methods.search('type',typeName);
+                            if (this.dom1==''&&this.dom2==''){
+                                this.showAll = false;
+                            }
+                        },
+                        canclSel1:function(e){//隐藏学科门类
+                            vue.dom1 = '';
+                            $("#dom1").css({"display":"none"});
+                            if (this.dom1==''&&this.dom2==''){
+                                this.showAll = false;
+                            }
+                            // var addressName = this.dom1;
+                            // var typeName = this.dom2;
+                            // this.showType = false;
+                            // this.dom2 = '';
+                            // this.$options.methods.search('address',addressName);
+                            // if (this.dom1==''&&this.dom2==''){
+                            //     this.showCity = false;
+                            //     this.showMutlSel = false;
+                            //     this.showAll = true;
+                            //     this.showPart = false;
+                            //     this.schools = [];
+                            // }
+                        },
+                        cancelMutiSel:function (e) {//取消显示多重选择框
+                            this.showAll = false;
+                            vue.dom0 = '';
+                            vue.dom1 = '';
+                            // this.showCity = false;
+                            // this.showType = false;
+                            // this.showMutlSel = false;
+                            // this.showAll = true;
+                            // this.showPart = false;
+                            // this.schools = [];
+                        }
+                    },
+                    watch:{
+                        keyword:function(val) {
+                            this.keyword = val;
+                            if (this.keyword.length == 0){
+                                vue.showAll = true;
+                                vue.showPart = false;
+                            }
+                        }
+                    }
+                });
+            });
+            Vue.filter("subStringFilter", function(value, start, end){
+                if (!value)
+                    return '';
+                return value.substring(start,end);
+            });
+            // 解析地址栏中的参数
+            function getUrlParms(para){
+                var search=location.search; //页面URL的查询部分字符串
+                var arrPara=[]; //参数数组。数组单项为包含参数名和参数值的字符串，如“para=value”
+                var arrVal=[]; //参数值数组。用于存储查找到的参数值
+
+                if(search!=""){
+                    var index=0;
+                    search=search.substr(1); //去除开头的“?”
+                    arrPara=search.split("&");
+
+                    for(i in arrPara){
+                        var paraPre=para+"="; //参数前缀。即参数名+“=”，如“para=”
+                        if(arrPara[i].indexOf(paraPre)==0&& paraPre.length<arrPara[i].length){
+                            arrVal[index]=decodeURI(arrPara[i].substr(paraPre.length)); //顺带URI解码避免出现乱码
+                            index++;
+                        }
+                    }
+                }
+
+                if(arrVal.length==1){
+                    return arrVal[0];
+                }else if(arrVal.length==0){
+                    return null;
+                }else{
+                    return arrVal;
+                }
+            }
+        </script>
+    </div>
+    <!-- navbar-->
+    <header class="header">
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container">
+                <!-- <a href="./" class="navbar-brand"><img src="img/logo.svg" alt="" class="img-fluid">考研信息交流平台</a> -->
+                <!-- <a href="#" >考研信息交流平台</a> -->
+                <h2>考研信息交流平台</h2>
+                <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="fa fa-bars ml-2"></i></button>
+                <div id="navbarSupportedContent" class="collapse navbar-collapse">
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="index" class="nav-link ">首页</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="schoolIndex" class="nav-link ">考研院校</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="majorIndex" class="nav-link active">考研专业</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="schoolIndex" class="nav-link">论坛专区</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="contact" class="nav-link">视频专区</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="text.html" class="nav-link"></a></li>
+                        <li class="nav-item dropdown"><a id="pages" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">个人设置</a>
+                            <div class="dropdown-menu"><a href="majorIndex.html" class="dropdown-item">个人资料</a><a href="contact.html" class="dropdown-item">退出登录</a><a href="text.html" class="dropdown-item">未开发</a></div>
+                        </li>
+                    </ul><a href="#" data-toggle="modal" data-target="#login" class="btn btn-primary navbar-btn ml-0 ml-lg-3">登录 </a>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Login Modal-->
+    <div id="login" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade bd-example-modal-lg">
+      <div role="document" class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+          <div class="modal-header border-bottom-0">
+            <button type="button" data-dismiss="modal" aria-label="Close" class="close"><span aria-hidden="true">×</span></button>
+          </div>
+          <div class="modal-body p-4 p-lg-5">
+            <form action="#" class="login-form text-left">
+              <div class="form-group mb-4">
+                <label>Email address</label>
+                <input type="email" name="email" placeholder="name@company.com" class="form-control">
+              </div>
+              <div class="form-group mb-4">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="Min 8 characters" class="form-control">
+              </div>
+              <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-primary">
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+<!-- 分类 Section-->
+    <section class="hero">
+      <div class="container categoryPosition">
+<!--        备考-->
+        <div class="descColumn">
+          <div class="left-mark"></div>
+          <span class="categoryTitle">备考</span>
+<!--          <span class="descColumnTitle">支付方式</span>-->
+          <a href="#">考研常识</a>
+          <a href="#">大纲解析</a>
+          <a href="#">专业课</a>
+          <a href="#">历年真题</a>
+          <a href="#">政治</a>
+          <a href="#">英语</a>
+          <a href="#">数学</a>
+        </div>
+<!--        报考-->
+        <div class="descColumn">
+          <div class="left-mark"></div>
+          <span class="categoryTitle">报考</span>
+          <a href="#">院校专业</a>
+          <a href="#">报考指南</a>
+          <a href="#">非全日制</a>
+          <a href="#">推荐免试</a>
+          <a href="#">招生简章</a>
+          <a href="#">研招政策</a>
+        </div>
+<!--        录取-->
+        <div class="descColumn">
+          <div class="left-mark"></div>
+          <span class="categoryTitle">录取</span>
+          <a href="#">成绩查询</a>
+          <a href="#">分数线</a>
+          <a href="#">复试指南</a>
+          <a href="#">调剂平台</a>
+          <a href="#">报录比</a>
+          <a href="#">研招报告</a>
+        </div>
+<!--        互动-->
+        <div class="descColumn">
+          <div class="left-mark"></div>
+          <span class="categoryTitle">互动</span>
+          <a href="#">考研圈</a>
+          <a href="#">考研微博</a>
+          <a href="#">考研公众号</a>
+          <a href="#">大讲堂</a>
+          <a href="#">考研视频</a>
+          <a href="#">招生咨询活动</a>
+        </div>
+<!--工具-->
+        <div class="descColumn">
+          <div class="left-mark"></div>
+          <span class="categoryTitle">工具</span>
+          <a href="#">掌上考研</a>
+          <a href="#">导师库</a>
+          <a href="#">每日高校</a>
+          <a href="#">专业库</a>
+        </div>
+      </div>
+    </section>
+    <!-- FAQ Section-->
+    <section>
+      <div class="container">
+        <!-- wordPress installation-->
+        <header class="section header mb-5">
+          <h2>热门搜索</h2>
+        </header>
+        <div class="row"> 
+          <div class="col-lg-12">
+            <div id="accordion" class="faq accordion accordion-custom pb-5">
+              <form action="#" class="subscription-form">
+                <div class="form-group2">
+                  <div class="search-key">
+                    <span ref="switchPage">查专业</span>
+                    <div class="keybox" style="display: none;">
+                      <ul>
+                        <li>搜学校&nbsp;</li>
+                        <li>查专业&nbsp;</li>
+                      </ul>
+                    </div>
+                  </div>
+                  <input type="text" v-model="keyword" placeholder="院校名称 / 院校代码 / 专业名称 / 专业代码" class="form-control" style="padding: 0.75rem 7rem;">
+                  <button type="button" class="btn btn-primary" v-on:click="search(null,null)"><span class="glyphicon glyphicon-search"></span>&nbsp;&nbsp;搜索目标专业</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <div class="col-lg-12">
+            <div  class="faq accordion accordion-custom pb-lg-5">
+<!--              专业类型，学科门类-->
+              <div class="selectbox">
+                  <div class="choose item clearfix" v-show="showAll">
+                      <div class="word">您已选择：</div>
+                      <div class="choosen clearfix">
+                          <div class="type choosen-li" id="dom0" @click="canclSel0($event)">
+                              <span value="0">{{dom0}}</span>
+                              <img src="/img/del.png">
+                          </div>
+                          <div class="sublev1 choosen-li" id="dom1" @click="canclSel1($event)">
+                              <span value="122" >{{dom1}}</span>
+                              <img src="/img/del.png">
+                          </div>
+                          <div class="del choosen-li" @click="cancelMutiSel($event)">
+                              <span>
+                                  <a href="#" target="_self">清空所选条件</a>
+                              </span>
+                              <img src="/img/del2.png">
+                          </div>
+                      </div>
+                  </div>
+
+                <div class="option item zyoption clearfix">
+                  <div class="word">专业类型：</div>
+                  <div class="option-ul clearfix" >
+                    <div class="option-li cover" type="majorType0" @click="selectMajor" :id="majorTypes[0]" :value="majorTypes[0]">{{majorTypes[0]}}</div>
+                    <div class="option-li xiahuaxian" type="majorType0" @click="selectMajor" :id="majorTypes[1]" :value="majorTypes[1]">{{majorTypes[1]}}</div>
+                    <div class="option-li xiahuaxian" type="majorType0" @click="selectMajor" :id="majorTypes[2]" :value="majorTypes[2]">{{majorTypes[2]}}</div>
+                  </div>
+                </div>
+                <div class="option item xkoption clearfix bornone">
+                  <div class="line"></div>
+                  <div class="word">学科门类：</div>
+                  <div class="option-ul clearfix" v-for="f in firstCoursePojos">
+                      <div class="xk-li xiahuaxian" type="majorType1" :id="f.firstCourseCode" :value="f.firstCourseCode" @click="selectMajor($event)">{{f.firstCourseCode}}{{f.firstCourseName}}</div>
+                  </div>
+                  <div class="option-xkbox clearfix">
+                  </div>
+                </div>
+              </div>
+<!--              专业显示主体-->
+              <div class="result">
+                <div class="result-top clearfix">
+                  <div class="sum">共查到<span>{{majorLength}}</span>个符合条件的专业</div>
+                  <div class="aniu fenye clearfix" id="li_sxx_sort">
+                    <div class="flArrow fl">
+                      <a href="javascript:;">
+                        <img src="/img/l_bg.png" alt="">
+                      </a>
+                    </div>
+                    <div class="li_pageTxt aniu-page fl">
+                      <i id="li_top_page">{{currPage}}</i>/
+                      <i id="li_top_num">{{AllPage}}</i>
+                    </div>
+                    <div class="frArrow fl">
+                      <a href="javascript:;">
+                        <img src="/img/s_r.png" alt="">
+                      </a>
+                    </div>
+                  </div>
+                  <div class="sort">
+                    <span value="sum(clicks) desc">按人气排序</span>
+                    <img src="/img/px_b.png" alt="">
+                  </div>
+                </div>
+                <div class="result-mid">
+                  <div class="topline clearfix">
+                    <div class="line-li wid1">招生专业名</div>
+                    <div class="line-li wid2">所属门类/领域</div>
+                    <div class="line-li wid3">所属一级学科/领域</div>
+                    <div class="line-li wid4">志愿填报</div>
+                    <div class="line-li wid5">开设院校</div>
+                  </div>
+                  <div class="content" >
+                    <div class="sline clearfix" v-for="m in majorIndexRequestLists" >
+                      <div class="sline-ul clearfix active"  >
+                        <div class="sline-li wid1" :id="m.ZSMajor.majorCode">[{{m.ZSMajor.majorCode}}]{{m.ZSMajor.majorName}}</div>
+                        <div class="sline-li wid2" :id="m.ZSMajor.majorCode">{{m.ZSMajor.firstCourseCode}}{{m.ZSMajor.firstCourseName}}</div>
+                        <div class="sline-li wid3" :id="m.ZSMajor.majorCode">{{m.ZSMajor.secondCourseCode}}{{m.ZSMajor.secondCourseName}}</div>
+                        <div class="sline-li bm wid4" :id="m.ZSMajor.majorCode">
+                          <a href="https://souky.eol.cn/collect/index">我要报名</a>
+                        </div>
+                        <div class="sline-li ksyx wid5" :id="m.ZSMajor.majorCode">
+                            <div @click="displaySChool($event)"  :value="m.ZSMajor.majorCode" ref="displaySChoolRef">
+                              <span >开设院校</span>
+                              <img src="/img/jtx.jpg" :id="m.ZSMajor.majorCode">
+                            </div>
+                        </div>
+                      </div>
+                      <div class="yxshow clearfix" :id="m.ZSMajor.majorCode" v-show="displaySChoolFlag" :value="m.ZSMajor.majorCode"  :ref="displaySChoolTJ">
+                        <div class="word">推荐院校</div>
+                        <div class="school clearfix" >
+                          <a href="/HomePage/index_1115.html" v-for="s in m.TJSchools" >{{s.schoolName}}</a>
+                        </div>
+                        <div class="all">
+                            <a href="/web/special/schoolrecom?specialid=459">查看全部</a>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="sline clearfix">
+                      <div class="sline-ul clearfix active">
+                        <div class="sline-li wid1">[010102]中国哲学</div>
+                        <div class="sline-li wid2">01哲学</div>
+                        <div class="sline-li wid3">0101哲学</div>
+                        <div class="sline-li bm wid4">
+                          <a href="https://souky.eol.cn/collect/index">我要报名</a>
+                        </div>
+                          <div class="sline-li ksyx wid5">
+                              <div>
+                                <span>开设院校</span>
+                                <img src="/img/jtx.jpg">
+                              </div>
+                          </div>
+                      </div>
+                        <div class="yxshow clearfix">
+                            <div class="word">推荐院校</div>
+                            <div class="school clearfix">
+                                <a href="/HomePage/index_1115.html">南京师范大学</a>
+                                <a href="/HomePage/index_261.html">华东师范大学</a>
+                                <a href="/HomePage/index_284.html">苏州大学</a>
+                                <a href="/HomePage/index_3.html">武汉大学</a>
+                                <a href="/HomePage/index_208.html">四川大学</a>
+                                <a href="/HomePage/index_51.html">中南大学</a>
+                                <a href="/HomePage/index_25.html">郑州大学</a>
+                                <a href="/HomePage/index_39.html">南京大学</a>
+                                <a href="/HomePage/index_144.html">厦门大学</a>
+                                <a href="/HomePage/index_147.html">北京大学</a>
+                                <a href="/HomePage/index_37.html">华中科技大学</a>
+                            </div>
+                            <div class="all">
+                                <a href="/web/special/schoolrecom?specialid=8">查看全部</a>
+                            </div>
+                        </div>
+                    </div>
+                      <div class="sline clearfix">
+                          <div class="sline-ul clearfix active">
+                              <div class="sline-li wid1">[070502]人文地理学</div>
+                              <div class="sline-li wid2">07理学</div>
+                              <div class="sline-li wid3">0705地理学</div>
+                              <div class="sline-li bm wid4"><a href="https://souky.eol.cn/collect/index">我要报名</a></div><div class="sline-li ksyx wid5"><div><span>开设院校</span><img src="/img/jtx.jpg"></div></div></div><div class="yxshow clearfix"><div class="word">推荐院校</div><div class="school clearfix"><a href="/HomePage/index_1115.html">南京师范大学</a><a href="/HomePage/index_261.html">华东师范大学</a><a href="/HomePage/index_3.html">武汉大学</a><a href="/HomePage/index_51.html">中南大学</a><a href="/HomePage/index_39.html">南京大学</a><a href="/HomePage/index_131.html">华中师范大学</a><a href="/HomePage/index_120.html">湖南师范大学</a><a href="/HomePage/index_147.html">北京大学</a><a href="/HomePage/index_925.html">西南大学</a><a href="/HomePage/index_239.html">华南师范大学</a><a href="/HomePage/index_171.html">浙江大学</a></div><div class="all"><a href="/web/special/schoolrecom?specialid=147">查看全部</a></div></div></div><div class="sline clearfix"><div class="sline-ul clearfix active"><div class="sline-li wid1">[025100]金融硕士</div><div class="sline-li wid2">02经济学</div><div class="sline-li wid3">0251金融硕士</div><div class="sline-li bm wid4"><a href="https://souky.eol.cn/collect/index">我要报名</a></div><div class="sline-li ksyx wid5"><div><span>开设院校</span><img src="/img/jtx.jpg"></div></div></div><div class="yxshow clearfix"><div class="word">推荐院校</div><div class="school clearfix"><a href="/HomePage/index_1115.html">南京师范大学</a><a href="/HomePage/index_261.html">华东师范大学</a><a href="/HomePage/index_284.html">苏州大学</a><a href="/HomePage/index_3.html">武汉大学</a><a href="/HomePage/index_126.html">武汉理工大学</a><a href="/HomePage/index_208.html">四川大学</a><a href="/HomePage/index_51.html">中南大学</a><a href="/HomePage/index_25.html">郑州大学</a><a href="/HomePage/index_39.html">南京大学</a><a href="/HomePage/index_144.html">厦门大学</a><a href="/HomePage/index_131.html">华中师范大学</a></div><div class="all"><a href="/web/special/schoolrecom?specialid=2768">查看全部</a></div></div></div><div class="sline clearfix"><div class="sline-ul clearfix active"><div class="sline-li wid1">[010108]科学技术哲学</div><div class="sline-li wid2">01哲学</div><div class="sline-li wid3">0101哲学</div><div class="sline-li bm wid4"><a href="https://souky.eol.cn/collect/index">我要报名</a></div><div class="sline-li ksyx wid5"><div><span>开设院校</span><img src="/img/jtx.jpg"></div></div></div><div class="yxshow clearfix"><div class="word">推荐院校</div><div class="school clearfix"><a href="/HomePage/index_1115.html">南京师范大学</a><a href="/HomePage/index_261.html">华东师范大学</a><a href="/HomePage/index_284.html">苏州大学</a><a href="/HomePage/index_3.html">武汉大学</a><a href="/HomePage/index_208.html">四川大学</a><a href="/HomePage/index_51.html">中南大学</a><a href="/HomePage/index_25.html">郑州大学</a><a href="/HomePage/index_39.html">南京大学</a><a href="/HomePage/index_144.html">厦门大学</a><a href="/HomePage/index_131.html">华中师范大学</a><a href="/HomePage/index_147.html">北京大学</a></div><div class="all"><a href="/web/special/schoolrecom?specialid=14">查看全部</a></div></div></div><div class="sline clearfix"><div class="sline-ul clearfix active"><div class="sline-li wid1">[070104]应用数学</div><div class="sline-li wid2">07理学</div><div class="sline-li wid3">0701数学</div><div class="sline-li bm wid4"><a href="https://souky.eol.cn/collect/index">我要报名</a></div><div class="sline-li ksyx wid5"><div><span>开设院校</span><img src="/img/jtx.jpg"></div></div></div><div class="yxshow clearfix"><div class="word">推荐院校</div><div class="school clearfix"><a href="/HomePage/index_261.html">华东师范大学</a><a href="/HomePage/index_3.html">武汉大学</a><a href="/HomePage/index_208.html">四川大学</a><a href="/HomePage/index_51.html">中南大学</a><a href="/HomePage/index_25.html">郑州大学</a><a href="/HomePage/index_39.html">南京大学</a><a href="/HomePage/index_144.html">厦门大学</a><a href="/HomePage/index_131.html">华中师范大学</a><a href="/HomePage/index_120.html">湖南师范大学</a><a href="/HomePage/index_147.html">北京大学</a><a href="/HomePage/index_925.html">西南大学</a></div><div class="all"><a href="/web/special/schoolrecom?specialid=127">查看全部</a></div></div></div><div class="sline clearfix"><div class="sline-ul clearfix active"><div class="sline-li wid1">[010105]伦理学</div><div class="sline-li wid2">01哲学</div><div class="sline-li wid3">0101哲学</div><div class="sline-li bm wid4"><a href="https://souky.eol.cn/collect/index">我要报名</a></div><div class="sline-li ksyx wid5"><div><span>开设院校</span><img src="/img/jtx.jpg"></div></div></div><div class="yxshow clearfix"><div class="word">推荐院校</div><div class="school clearfix"><a href="/HomePage/index_1115.html">南京师范大学</a><a href="/HomePage/index_261.html">华东师范大学</a><a href="/HomePage/index_284.html">苏州大学</a><a href="/HomePage/index_3.html">武汉大学</a><a href="/HomePage/index_126.html">武汉理工大学</a><a href="/HomePage/index_208.html">四川大学</a><a href="/HomePage/index_51.html">中南大学</a><a href="/HomePage/index_25.html">郑州大学</a><a href="/HomePage/index_39.html">南京大学</a><a href="/HomePage/index_144.html">厦门大学</a><a href="/HomePage/index_131.html">华中师范大学</a></div><div class="all"><a href="/web/special/schoolrecom?specialid=11">查看全部</a></div></div></div><div class="sline clearfix"><div class="sline-ul clearfix active"><div class="sline-li wid1">[070302]分析化学</div><div class="sline-li wid2">07理学</div><div class="sline-li wid3">0703化学</div><div class="sline-li bm wid4"><a href="https://souky.eol.cn/collect/index">我要报名</a></div><div class="sline-li ksyx wid5"><div><span>开设院校</span><img src="/img/jtx.jpg"></div></div></div><div class="yxshow clearfix"><div class="word">推荐院校</div><div class="school clearfix"><a href="/HomePage/index_1115.html">南京师范大学</a><a href="/HomePage/index_261.html">华东师范大学</a><a href="/HomePage/index_3.html">武汉大学</a><a href="/HomePage/index_208.html">四川大学</a><a href="/HomePage/index_51.html">中南大学</a><a href="/HomePage/index_25.html">郑州大学</a><a href="/HomePage/index_144.html">厦门大学</a><a href="/HomePage/index_131.html">华中师范大学</a><a href="/HomePage/index_120.html">湖南师范大学</a><a href="/HomePage/index_37.html">华中科技大学</a><a href="/HomePage/index_925.html">西南大学</a></div><div class="all"><a href="/web/special/schoolrecom?specialid=139">查看全部</a></div></div></div><div class="sline clearfix"><div class="sline-ul clearfix active"><div class="sline-li wid1">[071005]微生物学</div><div class="sline-li wid2">07理学</div><div class="sline-li wid3">0710生物学</div><div class="sline-li bm wid4"><a href="https://souky.eol.cn/collect/index">我要报名</a></div><div class="sline-li ksyx wid5"><div><span>开设院校</span><img src="/img/jtx.jpg"></div></div></div><div class="yxshow clearfix"><div class="word">推荐院校</div><div class="school clearfix"><a href="/HomePage/index_1115.html">南京师范大学</a><a href="/HomePage/index_284.html">苏州大学</a><a href="/HomePage/index_3.html">武汉大学</a><a href="/HomePage/index_208.html">四川大学</a><a href="/HomePage/index_51.html">中南大学</a><a href="/HomePage/index_25.html">郑州大学</a><a href="/HomePage/index_144.html">厦门大学</a><a href="/HomePage/index_131.html">华中师范大学</a><a href="/HomePage/index_120.html">湖南师范大学</a><a href="/HomePage/index_37.html">华中科技大学</a><a href="/HomePage/index_925.html">西南大学</a></div><div class="all"><a href="/web/special/schoolrecom?specialid=171">查看全部</a></div></div></div><div class="sline clearfix"><div class="sline-ul clearfix active"><div class="sline-li wid1">[020104]西方经济学</div><div class="sline-li wid2">02经济学</div><div class="sline-li wid3">0201理论经济学</div><div class="sline-li bm wid4"><a href="https://souky.eol.cn/collect/index">我要报名</a></div><div class="sline-li ksyx wid5"><div><span>开设院校</span><img src="/img/jtx.jpg"></div></div></div><div class="yxshow clearfix"><div class="word">推荐院校</div><div class="school clearfix"><a href="/HomePage/index_3.html">武汉大学</a><a href="/HomePage/index_208.html">四川大学</a><a href="/HomePage/index_51.html">中南大学</a><a href="/HomePage/index_25.html">郑州大学</a><a href="/HomePage/index_39.html">南京大学</a><a href="/HomePage/index_144.html">厦门大学</a><a href="/HomePage/index_131.html">华中师范大学</a><a href="/HomePage/index_120.html">湖南师范大学</a><a href="/HomePage/index_147.html">北京大学</a><a href="/HomePage/index_37.html">华中科技大学</a><a href="/HomePage/index_243.html">南开大学</a></div><div class="all"><a href="/web/special/schoolrecom?specialid=19">查看全部</a></div></div></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+    <footer class="main-footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-3 mb-5 mb-lg-0">
+            <div class="footer-logo"><img src="img/logo-footer.svg" alt="..." class="img-fluid"></div>
+          </div>
+          <div class="col-lg-3 mb-5 mb-lg-0">
+            <h5 class="footer-heading">Site pages</h5>
+            <ul class="list-unstyled">
+              <li> <a href="index.html" class="footer-link">Home</a></li>
+              <li> <a href="majorIndex.html" class="footer-link">FAQ</a></li>
+              <li> <a href="contact.html" class="footer-link">Contact</a></li>
+              <li> <a href="text.html" class="footer-link">Text Page</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3 mb-5 mb-lg-0">
+            <h5 class="footer-heading">Product</h5>
+            <ul class="list-unstyled">
+              <li> <a href="#" class="footer-link">Why Appton?</a></li>
+              <li> <a href="#" class="footer-link">Enterprise</a></li>
+              <li> <a href="#" class="footer-link">Blog</a></li>
+              <li> <a href="#" class="footer-link">Pricing</a></li>
+            </ul>
+          </div>
+          <div class="col-lg-3">
+            <h5 class="footer-heading">Resources</h5>
+            <ul class="list-unstyled">
+              <li> <a href="#" class="footer-link">Download</a></li>
+              <li> <a href="#" class="footer-link">Help Center</a></li>
+              <li> <a href="#" class="footer-link">Guides</a></li>
+              <li> <a href="#" class="footer-link">Partners</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="copyrights">
+        <div class="container">
+          <div class="row">
+            <div class="col-lg-6 text-center text-lg-left">
+              <p class="copyrights-text mb-3 mb-lg-0">&copy; All rights reserved. Appton.co. Bootstrapious .More Templates <a href="http://www.cssmoban.com/" target="_blank" title="模板之家">模板之家</a> - Collect from <a href="http://www.cssmoban.com/" title="网页模板" target="_blank">网页模板</a></p>
+              
+              
+            </div>
+            <div class="col-lg-6 text-center text-lg-right">
+              <ul class="list-inline social mb-0">
+                <li class="list-inline-item"><a href="#" class="social-link"><i class="fa fa-facebook"></i></a><a href="#" class="social-link"><i class="fa fa-twitter"></i></a><a href="#" class="social-link"><i class="fa fa-youtube-play"></i></a><a href="#" class="social-link"><i class="fa fa-vimeo"></i></a><a href="#" class="social-link"><i class="fa fa-pinterest"></i></a></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+    <script src="js/front.js"></script>
+</div>
+</body>
+</html>

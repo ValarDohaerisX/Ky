@@ -50,19 +50,22 @@ public interface SchoolMapper {
     @Select("select * from school where schoolNo = #{schoolNo}")
     SchoolPojo getBySchoolNo (@Param("schoolNo") String schoolNo);
 
+    @Select("select * from school where schoolCode = #{schoolCode}")
+    SchoolPojo getBySchoolCode (@Param("schoolCode") String schoolCode);
+
     @Select("select * from school")
     List<SchoolPojo> getAll();
 
-    @Select("select * from school where schoolName like '%#{schoolName}%'")
+    @Select("select * from school where schoolName like concat('%',#{schoolName},'%')")
     List<SchoolPojo> getBySchoolNameLike(@Param("schoolName")String schoolName);
 
-    @Select("select * from school where schoolType like '%#{schoolType}%'")
+    @Select("select * from school where schoolType like concat('%',#{schoolType},'%')")
     List<SchoolPojo> getBySchoolTypeLike(@Param("schoolType")String schoolType);
 
-    @Select("select * from school where schoolLevel like '%#{schoolLevel}%'")
+    @Select("select * from school where schoolLevel like concat('%',#{schoolLevel},'%')")
     List<SchoolPojo> getBySchoolLevelLike(@Param("schoolLevel")String schoolLevel);
 
-    @Select("select * from school where address like '%#{address}%'")
+    @Select("select * from school where address like concat('%',#{address},'%')")
     List<SchoolPojo> getByAddressLike(@Param("address")String address);
 
     @Delete("delete from school where schoolNo = #{schoolNo}")

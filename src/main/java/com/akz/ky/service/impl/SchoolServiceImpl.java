@@ -648,6 +648,13 @@ public class SchoolServiceImpl implements SchoolService {
         }
         return oriSchoolMainInfoPojoMaps;
     }
+
+    @Override
+    public Result<SchoolPojo> getBySchoolCode(String schoolCode) {
+        SchoolPojo bySchoolCode = schoolMapper.getBySchoolCode(schoolCode);
+        return Result.success(bySchoolCode);
+    }
+
     public Result checkIfEmpty(List<SchoolPojo> schoolPojos){
         if (schoolPojos == null || schoolPojos.size() == 0){
             return Result.failure(ApiReturnCode.C_Fail_Get);

@@ -1,5 +1,6 @@
 package com.akz.ky.mapper;
 
+import com.akz.ky.pojo.MajorIndexRequestPojo;
 import com.akz.ky.pojo.MajorPojo;
 import org.apache.ibatis.annotations.*;
 
@@ -58,4 +59,19 @@ public interface MajorMapper {
 
     @Select("select *  from major where majorNo = #{majorNo}")
     MajorPojo getByMajorNo(@Param("majorNo") int majorNo);
+
+    @Select("select *  from major where majorName like concat('%',#{majorName},'%')")
+    MajorPojo getByMajorName(@Param("majorName") String majorName);
+
+    @Select("select *  from major where schoolNo = #{schoolNo}")
+    List<MajorPojo> getBySchoolNo(@Param("schoolNo") int schoolNo);
+
+    @Select("select *  from major ")
+    List<MajorPojo> getAll();
+
+    @Select("select c.majorCode,c.majorName,c.majorType,a.schoolCode,a.schoolName,d.firstCourseCode,d.firstCourseName,e.secondCourseCode,e.secondCourseName " +
+            "from school a INNER JOIN (select * from  major a where a.schoolNo is not null GROUP BY majorCode HAVING count(majorCode)>1) b  " +
+            "INNER JOIN major c INNER JOIN firstcourse d INNER JOIN secondcourse e on b.majorCode = c.majorCode and c.schoolNo = a.schoolNo " +
+            "and c.firstCourseNo = d.firstCourseNo and c.secondCourseNo = e.secondCourseNo ORDER BY c.majorCode ")
+    List<MajorIndexRequestPojo> majorIndexRequest();
 }

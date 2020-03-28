@@ -2,6 +2,8 @@ package com.akz.ky.pojo;
 
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @author lzx
  * @version 1.0
@@ -29,5 +31,5 @@ public class DepartmentPojo {
 
     String majorType;
 
-    MajorPojo majorPojo;
+    List<MajorPojo> majors;
 }

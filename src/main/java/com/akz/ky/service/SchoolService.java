@@ -55,4 +55,5 @@ public interface SchoolService {
 
     LinkedHashMap<String,List<SchoolMainInfoPojo>> getSchoolMainInfoMaps(List<SchoolMainInfoPojo> schoolMainInfoPojos);
 
+    Result<SchoolPojo> getBySchoolCode(String schoolCode);
 }
