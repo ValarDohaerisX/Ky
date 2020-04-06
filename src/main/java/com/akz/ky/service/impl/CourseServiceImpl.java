@@ -6,21 +6,27 @@ import com.akz.ky.message.Result;
 import com.akz.ky.pojo.CoursePojo;
 import com.akz.ky.service.CourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "courses")
 public class CourseServiceImpl implements CourseService {
 
     @Autowired(required = false)
     CourseMapper courseMapper;
     @Override
+    @CacheEvict(allEntries = true)
     public boolean add(CoursePojo coursePojo) {
         return courseMapper.add(coursePojo);
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public boolean delete(int id) {
         return courseMapper.delete(id);
     }
@@ -43,11 +49,13 @@ public class CourseServiceImpl implements CourseService {
         return f;
     }
     @Override
+    @CacheEvict(allEntries = true)
     public boolean update(CoursePojo coursePojo) {
         return courseMapper.updateCourse(coursePojo);
     }
 
     @Override
+    @Cacheable(key="'courses-one-byId-'+ #p0")
     public Result<CoursePojo> getById(int id) {
         CoursePojo coursePojo = courseMapper.getById(id);
         if (coursePojo == null){
@@ -57,6 +65,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Cacheable(key="'courses-one-byName-'+ #p0")
     public Result<List<CoursePojo>> getByName(String name) {
         List<CoursePojo> coursePojos = courseMapper.getByName(name);
         if (coursePojos == null){
@@ -68,6 +77,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Cacheable(key="'courses-one-byCode-'+ #p0")
     public Result<CoursePojo> getByCode(String code) {
         CoursePojo coursePojo = courseMapper.getByCode(code);
         if (coursePojo == null){
@@ -77,6 +87,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Cacheable(key="'courses-one-byType-'+ #p0")
     public Result<List<CoursePojo>> listByType(String type) {
         List<CoursePojo> coursePojos = courseMapper.listByType(type);
         if (coursePojos == null){
@@ -86,6 +97,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Cacheable(key="'courses-all")
     public Result<List<CoursePojo>> listByAll() {
         List<CoursePojo> coursePojos = courseMapper.listByAll();
         if (coursePojos == null){

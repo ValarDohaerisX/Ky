@@ -8,33 +8,36 @@ import java.util.List;
 @Mapper
 public interface UserMapper {
     @Insert("<script>insert into user " +
-            "set name = #{u.name}," +
-            "password = #{u.password}," +
-            "realName = #{u.realName}," +
-            "sex = #{u.sex}," +
-            "mobile = #{u.mobile}," +
-            "schoolname = #{u.schoolname}," +
-            "grade = #{u.grade}," +
-            "major = #{u.major}," +
-            "aimSchool = #{u.aimSchool}," +
-            "aimMajor = #{u.aimMajor}," +
-            "userType = #{u.userType}," +
-            "userPemission = #{u.userPemission}," +
-            "signature = #{u.signature}," +
-            "activity = #{u.activity}," +
-            "badge = #{u.badge}," +
+            "set userLoginName = #{u.userLoginName}," +
+            "userLoginPassword = #{u.userLoginPassword}," +
+            "salt = #{u.salt}," +
+            "userName = #{u.userName}," +
+            "userSex = #{u.userSex}," +
+            "userCity = #{u.userCity}," +
+            "userContact = #{u.userContact}," +
+            "userSignature = #{u.userSignature}," +
+            "userSchoolName = #{u.userSchoolName}," +
+            "userMajorName = #{u.userMajorName}," +
+            "userTagetSchoolName = #{u.userTagetSchoolName}," +
+            "userTagetMajorlName = #{u.userTagetMajorlName}," +
+            "userIntegral = #{u.userIntegral}," +
+            "userLevel = #{u.userLevel}," +
+            "lastLoginDate = #{u.lastLoginDate}," +
+            "createDate = #{u.createDate}," +
             "createTime = #{u.createTime}," +
+            "modifyDate = #{u.modifyDate}," +
+            "modifyTime = #{u.modifyTime}" +
             "</script>")
-    @Options(useGeneratedKeys = true,keyProperty = "id")
+    @Options(useGeneratedKeys = true,keyProperty = "u.userNo",keyColumn="userNo")
     boolean add(@Param("u") UserPojo userPojo);
 
     @Select("<script>select * from user where id = #{id}</script>")
     UserPojo getById(@Param("id") int id);
 
-    @Select("<script>select * from user where name = #{name}</script>")
+    @Select("<script>select * from user where userLoginName = #{name}</script>")
     UserPojo getByName(@Param("name") String name);
 
-    @Select("<script>select * from user where name = #{name}</script>")
+    @Select("<script>select * from user where userLoginName = #{name} and  userLoginPassword = #{password}</script>")
     UserPojo checkUser(@Param("name") String name, @Param("password") String password);
 
     @Select("<script>select * from user</script>")
@@ -52,8 +55,9 @@ public interface UserMapper {
     List<UserPojo> listByUser(@Param("u") UserPojo userPojo);
 
     @Update("<script>update user set" +
-            "<if test = 'u.name!=null'> name = #{u.name}</if>" +
-            "<if test = 'u.password!=null'> password = #{u.password}</if>" +
+            "<if test = 'u.userLoginName!=null'> userLoginName = #{u.userLoginName}</if>" +
+            "<if test = 'u.userLoginPassword!=null'> userLoginPassword = #{u.userLoginPassword}</if>" +
+            "<if test = 'u.salt!=null'> salt = #{u.salt}</if>" +
             "<if test = 'u.realName!=null'> realName = #{u.realName}</if>" +
             "<if test = 'u.sex!=null'> sex = #{u.sex}</if>" +
             "<if test = 'u.mobile!=null'> mobile = #{u.mobile}</if>" +
@@ -70,7 +74,12 @@ public interface UserMapper {
             " where id = #{u.id}</script>")
     boolean update(@Param("u") UserPojo userPojo);
 
+    @Update("update user set lastLoginDate = #{u.lastLoginDate},modifyDate = #{u.modifyDate},modifyTime=#{u.modifyTime} where userNo = #{u.userNo}")
+    boolean updateLoginTime(@Param("u") UserPojo userPojo);
+
     @Delete("<script>delete from user where id = #{id} </script>")
     boolean delete(@Param("id") int id);
 
+    @Select("select * from user where  userLoginName = #{name}")
+    UserPojo isExists(@Param("name")String name);
 }

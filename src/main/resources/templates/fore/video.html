@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>考研信息交流平台</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="vendor/font-awesome/css/font-awesome.min.css">
+    <!--    <script src="https://how2j.cn/study/js/jquery/2.0.0/jquery.min.js"></script>-->
+    <!--    <link href="https://how2j.cn/study/css/bootstrap/3.3.6/bootstrap.min.css" rel="stylesheet">-->
+    <!--    <script src="https://how2j.cn/study/js/bootstrap/3.3.6/bootstrap.min.js"></script>-->
+    <!-- Google fonts - Poppins-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,600">
+    <!-- Lightbox-->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/vue.min.js"></script>
+    <link rel="stylesheet" href="vendor/lightbox2/css/lightbox.css">
+    <!-- Custom font icons-->
+    <link rel="stylesheet" href="css/fontastic.css">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="css/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/favicon.png">
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+</head>
+<body>
+<div id="workingArea" >
+    <div th:fragment="html">
+        <script type="text/javascript">
+            $(function(){
+
+                var data4Vue = {
+                    uri:'register',
+                    loginUser:{userLoginName:'', userLoginPassword:''},
+                    user:{userNo:0,userLoginName:'', userLoginPassword:'', repeatpassword:'',repeatPwd:'',userName:'',userSex:'',userCity:'',userContact:'',userSchoolName:'',userMajorName:'',userTagetSchoolName:'',userTagetMajorlName:''},
+                    showUser:false,
+                    showLogin:true,
+                    currUser:'',
+                    msg:{mainTieNo:0,title:'',content:'', userNo:0, userName:'',reviewNum:0, GoodNum:0, BadNum:0, createdTime:'', lastReplyTime:''},
+                    msgs:[],//初始化页面时，总帖子集合
+                    childMsg:{childTieNo:0,comment:'',userNo:0,userName:'',good:0,bad:0,createdTime:'',reviewNum:0,mainTieNo:0,childTieNoo:0},//评论
+                    childMsgs:[],//所有贴的全部评论及回复
+                    childDetailMsgs:[],//特定贴的全部评论及回复
+                    childDetailMsgss:[],//
+                    showMsgDetail:false,//展示评论明细页面
+                    comment:'',//对某特定帖子进行回复的内容
+                    currUser:{},//回帖的用户(登陆者，评论自己，对评论进行评论)
+                    showCommentChildInput:false,//是否显示回复评论输入框
+                };
+                //ViewModel
+                var vue = new Vue({
+                    el: '#workingArea',
+                    data: data4Vue,
+                    mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                        this.load();
+                    },
+                    methods: {
+                        load:function(){
+                            console.log("进入方法...");
+                            //获取session
+                            var user= '[[${session.user}]]';
+                            console.log("load.user:"+user);
+                            console.log("load.user type:"+typeof user);
+                            if (user!=''){
+                                this.showUser = true;
+                                this.showLogin = false;
+                            }else{
+                                this.showUser = false;
+                                this.showLogin = true;
+                            }
+                            var url = "/getMsg";
+                            axios.post(url,this.user).then(function(response) {
+                                var data = response.data.body;
+                                vue.msgs = data.msgs;
+                                vue.childMsgs = data.childMsgs;
+                            });
+                            console.log("退出方法...");
+                        },
+                        exit:function(){
+                            var url = "/exit";
+                            axios.post(url,this.user).then(function(response) {
+                                var data = response.data;
+                            });
+                            var user= '[[${session.user}]]';
+                            console.log("user:"+user);
+                            vue.showUser = false;
+                            vue.showLogin = true;
+                            vue.msg.content = '';
+                            vue.msg.title = '';
+                        },
+                        login:function(){
+                            var url = "/login";
+                            if(0==this.loginUser.userLoginName.length){
+                                alert("请输入用户名");
+                                return;
+                            }
+                            if(0==this.loginUser.userLoginPassword.length){
+                                alert("请输入密码");
+                                return;
+                            }
+                            axios.post(url,this.loginUser).then(function(response) {
+                                console.log("进入方法...");
+                                var data = response.data;
+                                var code = data.returnCode.code;
+                                var msg = data.returnCode.desc;
+                                console.log("response.data:"+JSON.stringify(response.data));
+                                if (code == 1000){
+                                    vue.user = data.body;
+                                    alert("登录成功");
+                                    vue.showUser = true;
+                                    vue.showLogin = false;
+                                }else{
+                                    alert(msg);
+                                }
+                                vue.loginUser.userLoginName ='';
+                                vue.loginUser.userLoginPassword = '';
+                                console.log("退出方法...");
+                            });
+                        },
+                        register:function () {
+                            var url =  this.uri;
+                            if(0==this.user.userLoginName.length){
+                                alert("请输入用户名");
+                                return;
+                            }
+                            if(0==this.user.userLoginPassword.length){
+                                alert("请输入密码");
+                                return;
+                            }
+                            if(0==this.user.repeatPwd.length){
+                                alert("请输入重复密码");
+                                return;
+                            }
+                            if(this.user.userLoginPassword !=this.user.repeatPwd){
+                                alert("重复密码不一致");
+                                return;
+                            }
+                            axios.post(url,this.user).then(function(response) {
+                                console.log("进入方法...");
+                                var data = response.data;
+                                var code = data.returnCode.code;
+                                var msg = data.returnCode.desc;
+                                vue.user = data.body;
+                                if (code == 1000){
+                                    alert("注册成功，请重新登录！");
+                                    $("#register").hide();
+                                }else{
+                                    alert("注册失败，请重新注册！");
+                                    $("#register").hide();
+                                }
+                                console.log("退出方法...");
+                            });
+                        },
+                        sendMsg:function(){
+                            var url = "/sendMsg";
+                            console.log("send msg start ....");
+                            if(0==this.msg.title.length){
+                                alert("请输入标题");
+                                return;
+                            }
+                            if(0==this.msg.content.length){
+                                alert("请输入内容");
+                                return;
+                            }
+                            var user= '[[${session.user}]]';
+                            console.log("send msg.user:"+user);
+                            console.log("send msg object:"+JSON.stringify(this.msg));
+                            console.log("send msg enter back");
+                            if (vue.user.userNo == ''){
+                                alert("请先登录用户，再进行操作");
+                                return;
+                            }
+                            var msg;
+                            var user;
+                            // var params = [this.msg,this.user];
+                            var params = {"msg":this.msg,"user":this.user};
+                            // params = JSON.stringify(params);
+                            // console.log("params:"+JSON.stringify(params));
+                            // console.log("params.type:"+typeof params);
+                            // var data = Qs.stringify({"msg":this.msg,"user":this.user});
+                            console.log("params:"+params);
+                            var headers = {"Content-Type":"application/json;charset=utf-8"};
+                            axios.post(url,params).then(function(response) {
+                                var data = response.data;
+                                console.log("返回的数据:"+JSON.stringify(data));
+                                vue.msg.content = '';
+                                vue.msg.title = '';
+                            });
+
+                        },
+                        showMsgDetailButton:function () {
+                            var mainTieNo = $("#showMsgDetailId").attr("value");
+                            for (let i = 0; i < vue.msgs.length; i++) {
+                                var msg = vue.msgs[i];
+                                if (mainTieNo == msg.mainTieNo){
+                                    vue.msg = msg; //主贴标题及内容显示
+                                }
+                            }
+                            console.log("展示vue.childMsgs:"+JSON.stringify(vue.childMsgs));
+                            console.log("vue.childMsgs.length:"+vue.childMsgs.length);
+                            console.log("vue.childMsgs['1']:"+JSON.stringify(vue.childMsgs['1']));//代表1号这个帖子
+                            console.log("vue.childMsgs['1'].length:"+JSON.stringify(vue.childMsgs['1'].length));
+                            console.log("vue.childMsgs['1'][1]:"+JSON.stringify(vue.childMsgs['1'][1]));//代表1号帖子1号评论
+                            console.log("vue.childMsgs['1'][2]:"+JSON.stringify(vue.childMsgs['1'][2]));//代表1号帖子2号评论
+                            console.log("vue.childMsgs['1'][1][0]:"+JSON.stringify(vue.childMsgs['1'][1][0]));//代表1号帖子1号评论
+                            console.log("vue.childMsgs['1'][2][0]:"+JSON.stringify(vue.childMsgs['1'][2][0]));//代表1号帖子2号评论
+                            // var id = mainTieNo;
+                            vue.childDetailMsgs = vue.childMsgs[mainTieNo];
+                            console.log("vue.childMsgs['1']:"+JSON.stringify(vue.childMsgs[mainTieNo]));
+                            console.log("vue.childMsgs['1']['1'].length:"+JSON.stringify(vue.childMsgs[mainTieNo]['1'].length));
+
+                            console.log("mainTieNo:"+mainTieNo);
+                            console.log("vue.childDetailMsgs[1]:"+JSON.stringify(vue.childDetailMsgs[1]));
+                            console.log("vue.childDetailMsgs[2]:"+JSON.stringify(vue.childDetailMsgs[2]));
+                            console.log("vue.childDetailMsgs[1][0]:"+JSON.stringify(vue.childDetailMsgs[1][0]));
+                            console.log("vue.childDetailMsgs[1][1]:"+JSON.stringify(vue.childDetailMsgs[1][1]));
+                            vue.showMsgDetail = true;
+
+                        },
+                        closeMsgDetailButton:function () {
+                            vue.showMsgDetail = false;//隐藏明细评论页面
+                            vue.childDetailMsgs = [];//置空特定贴全部评论内容
+                            vue.msg = {};//置空特定帖标题及内容
+                        },
+                        commentButton:function() {
+                            var msg = vue.msg;
+                            var user = vue.user;
+                            if (0==user.userNo){
+                                alert("请先登录再操作！");
+                                return;
+                            }
+                            if (msg.userNo!=0){
+                                console.log("comment:"+vue.childMsg.comment);
+                                if (0!=vue.childMsg.comment.length){
+                                    vue.childMsg.userNo = user.userNo;
+                                    vue.childMsg.userName = user.userName;
+                                    vue.childMsg.mainTieNo = msg.mainTieNo;
+                                    vue.childMsg.childTieNoo = 0;
+                                    var url = "/sendChildTie";
+                                    axios.post(url,vue.childMsg).then(function(response) {
+                                        var data = response.data.body;
+                                        console.log("发送评论响应后的data:"+JSON.stringify(data));
+                                        var mainTieNo = data.mainTieNo;
+                                        var childTieNoo = data.childTieNoo;
+                                        var childTieNo = data.childTieNo;
+                                        if (childTieNoo==0){
+                                            // vue.childMsgs['1'][1]
+
+                                            vue.childDetailMsgs[childTieNo] = [];
+                                            vue.childDetailMsgs[childTieNo][0] = [];
+                                            vue.childDetailMsgs[childTieNo][1] = [];
+                                            vue.childDetailMsgs[childTieNo][0].push(data);
+                                            var no = childTieNo+"";
+                                            var list1 = [];
+                                            var list2 = [];
+                                            var list0 = [];
+                                            list1.push(data);
+                                            list0.push(list1);
+                                            list0.push(list2);
+                                            Vue.set(vue.childDetailMsgs,no,list0);
+                                            console.log("vue.childDetailMsgs["+childTieNo+"]:"+JSON.stringify(vue.childDetailMsgs[childTieNo]));
+                                            // vue.childDetailMsgs = ;
+                                            this.$forceUpdate()//强制重新渲染视图就行了
+
+                                            vue.showCommentChildInput = false;
+                                        }
+                                        // console.log("sendChildTie ->data:"+JSON.stringify(data));
+                                        // vue.childDetailMsgs.push(data);
+                                    });
+                                }else{
+                                    alert("评论不能为空！");
+                                    return;
+                                }
+                            }
+                            // vue.childMsg.comment = '';
+                            vue.childMsg = {};
+                        },
+                        showCommentChildButton:function (e) {
+                            // var childTieNo = $(this).attr("value");
+                            var childTieNo = e.target.getAttribute('value');
+                            console.log("childTieNoo:"+childTieNo);
+                            vue.childMsg.childTieNoo = childTieNo;
+                            $("div.showCommentChildClass[id='"+childTieNo+"']").toggle();
+                            // vue.showCommentChildInput = true;
+                        },
+                        commentChildButton:function () {
+                            var msg = vue.msg;
+                            var user = vue.user;
+                            if (0==user.userNo){
+                                alert("请先登录再操作！");
+                                return;
+                            }
+                            if (msg.userNo!=0){
+                                console.log("comment:"+vue.comment);
+                                if (0!=vue.comment.length){
+                                    vue.childMsg.userNo = user.userNo;
+                                    vue.childMsg.userName = user.userName;
+                                    vue.childMsg.mainTieNo = msg.mainTieNo;
+                                    vue.childMsg.comment = vue.comment;
+                                    var url = "/sendChildTie";
+                                    axios.post(url,vue.childMsg).then(function(response) {
+                                        var data = response.data.body;
+                                        var mainTieNo = data.mainTieNo;
+                                        var childTieNoo = data.childTieNoo;
+                                        if (childTieNoo!=0){
+                                            // vue.childMsgs['1'][1]
+                                            vue.childDetailMsgs[childTieNoo][1].push(data);
+                                        }
+                                        console.log("sendChildTie ->data:"+JSON.stringify(data));
+                                        // vue.childDetailMsgs.push(data);
+                                    });
+
+                                }else{
+                                    alert("评论不能为空！");
+                                    return;
+                                }
+                            }
+                            vue.showCommentChildInput = false;
+                            vue.childMsg.comment = '';
+                            vue.childMsg = {};
+                        }
+                    },
+                    watch:{
+
+                    }
+                });
+            });
+            Vue.filter("subStringFilter", function(value, start, end){
+                if (!value)
+                    return '';
+                return value.substring(start,end);
+            });
+            // 解析地址栏中的参数
+            function getUrlParms(para){
+                var search=location.search; //页面URL的查询部分字符串
+                var arrPara=[]; //参数数组。数组单项为包含参数名和参数值的字符串，如“para=value”
+                var arrVal=[]; //参数值数组。用于存储查找到的参数值
+
+                if(search!=""){
+                    var index=0;
+                    search=search.substr(1); //去除开头的“?”
+                    arrPara=search.split("&");
+
+                    for(i in arrPara){
+                        var paraPre=para+"="; //参数前缀。即参数名+“=”，如“para=”
+                        if(arrPara[i].indexOf(paraPre)==0&& paraPre.length<arrPara[i].length){
+                            arrVal[index]=decodeURI(arrPara[i].substr(paraPre.length)); //顺带URI解码避免出现乱码
+                            index++;
+                        }
+                    }
+                }
+
+                if(arrVal.length==1){
+                    return arrVal[0];
+                }else if(arrVal.length==0){
+                    return null;
+                }else{
+                    return arrVal;
+                }
+            }
+        </script>
+    </div>
+    <!-- navbar-->
+    <header class="header">
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container">
+                <!-- <a href="./" class="navbar-brand"><img src="img/logo.svg" alt="" class="img-fluid">考研信息交流平台</a> -->
+                <!-- <a href="#" >考研信息交流平台</a> -->
+                <h2>考研信息交流平台</h2>
+                <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="fa fa-bars ml-2"></i></button>
+                <div id="navbarSupportedContent" class="collapse navbar-collapse">
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="index" class="nav-link ">首页</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="schoolIndex" class="nav-link">考研院校</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="majorIndex" class="nav-link">考研专业</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="schoolIndex" class="nav-link ">论坛专区</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="contact" class="nav-link active">视频专区</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="text.html" class="nav-link"></a></li>
+                        <li class="nav-item dropdown">
+                            <a id="pages" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">个人设置</a>
+                            <div class="dropdown-menu">
+                                <a href="majorIndex.html" class="dropdown-item">个人资料</a>
+                                <a href="contact.html" class="dropdown-item">退出登录</a>
+                                <a href="text.html" class="dropdown-item">未开发</a>
+                            </div>
+                        </li>
+
+                        <li class="nav-item"> <a href="#nowhere" class="nav-link" v-show="showUser">欢迎你,<span style="color: red;font-size: 18px;">{{user.userName}}</span></a></li>
+                        <li class="nav-item"> <a href="#nowhere" class="nav-link" @click="exit" v-show="showUser">退出</a></li>
+                    </ul>
+
+                    <a href="#" data-toggle="modal" data-target="#login" class="btn btn-primary navbar-btn ml-0 ml-lg-3" v-show="showLogin">登录 </a>
+                    <a href="#" data-toggle="modal" data-target="#register" class="btn btn-success navbar-btn ml-0 ml-lg-3" v-show="showLogin">注册 </a>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Login Modal-->
+    <div id="login" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade bd-example-modal-lg">
+        <div role="document" class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="background-color: #ccc;">
+                <div class="modal-header border-bottom-0">
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body p-4 p-lg-5">
+                    <form action="#" class="login-form text-left">
+                        <div class="form-group mb-4">
+                            <label>账号</label>
+                            <input type="text" v-model="loginUser.userLoginName" placeholder="请输入你的账号..." class="form-control">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>密码</label>
+                            <input type="password" v-model="loginUser.userLoginPassword" placeholder="请输入你的密码..." class="form-control" autocomplete>
+                        </div>
+                        <div class="form-group">
+                            <input type="button" value="登录" class="btn btn-primary" @click="login" data-dismiss="modal" aria-label="Close" >
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- register Modal-->
+    <div id="register" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade bd-example-modal-lg">
+        <div role="document" class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="background-color: #ccc;">
+                <div class="modal-header border-bottom-0">
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body p-4 p-lg-5">
+                    <form action="#" class="login-form text-left">
+                        <div class="form-group mb-4">
+                            <label>账号</label>
+                            <input type="text" v-model="user.userLoginName" placeholder="请输入你的账号..." class="form-control" maxlength="10">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>用户名</label>
+                            <input type="text" v-model="user.userName" placeholder="请输入你的用户名..." class="form-control" maxlength="10">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>密码</label>
+                            <input type="password" v-model="user.userLoginPassword" placeholder="请输入你的密码..." class="form-control" maxlength="10">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>确认密码</label>
+                            <input type="password" v-model="user.repeatPwd" placeholder="请重复输入你的密码..." class="form-control" maxlength="10">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>性别</label>
+                            <input type="text" v-model="user.userSex" placeholder="请输入你的性别..." class="form-control" maxlength="1">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>所在城市</label>
+                            <input type="text" v-model="user.userCity" placeholder="请输入你的所在城市" class="form-control" maxlength="11">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>联系方式</label>
+                            <input type="text" v-model="user.userContact" oninput="value=value.replace(/^[1][3,4,5,6,7,8,9][0-9]{9}$/,'')" placeholder="请输入你的联系方式(可选)" class="form-control" maxlength="11">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>所在大学</label>
+                            <input type="text" v-model="user.userSchoolName" placeholder="请输入你的大学" class="form-control" maxlength="9">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>所在专业</label>
+                            <input type="text" v-model="user.userMajorName" placeholder="请输入你的所在专业" class="form-control" maxlength="15">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>目标院校</label>
+                            <input type="text" v-model="user.userTagetSchoolName" placeholder="请输入你的目标院校(可选)" class="form-control" maxlength="9">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>目标专业</label>
+                            <input type="text" v-model="user.userTagetMajorlName" placeholder="请输入你的目标专业(可选)" class="form-control" maxlength="15">
+                        </div>
+                        <div class="form-group">
+                            <input type="button" value="注册" class="btn btn-primary" @click="register" data-dismiss="modal" aria-label="Close">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Hero Section-->
+    <section class="hero" style="">
+        <div class="container mb-5">
+            <div class="row align-items-center">
+
+                <div class="col-lg-12">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="head-title text-center">
+                                <h2 class="text-black">Latest Case Studies</h2>
+                                <p class="text-black m-top-10">How well do you rank against the competition? We grade your site based on 50+ criteria metrics.
+                                </p>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-12">
+                            <div class="main-studies m-top-50">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="studies-item parent-border">
+                                            <div class="studies-feature border">
+                                                <img class="img-rounded" src="/img/studies-img-01.jpg" alt="">
+                                                <div class="studies-overlay img-rounded"><a href=""><span class="icon icon-arrows-2 hvr-hang"></span></a></div>
+                                                <div class="custom-hover"></div>
+                                            </div>
+                                            <div class="studies-conten m-top-30">
+                                                <h4><a href="">Acme Corporation</a></h4>
+                                                <p class="m-top-10">Objective: Build a larger twitter community</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="studies-item xs-m-top-35 parent-border">
+                                            <div class="studies-feature border">
+                                                <img class="img-rounded" src="assets/images/studies-img-02.jpg" alt="">
+                                                <div class="studies-overlay img-rounded"><a href=""><span class="icon icon-arrows-2 hvr-hang"></span></a></div>
+                                            </div>
+                                            <div class="studies-conten m-top-30">
+                                                <h4><a href="">Soylent Corp </a></h4>
+                                                <p class="m-top-10">Objective: Make tone &amp; branding consistency</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="studies-item sm-m-top-35 parent-border">
+                                            <div class="studies-feature border">
+                                                <img class="img-rounded" src="assets/images/studies-img-03.jpg" alt="">
+                                                <div class="studies-overlay img-rounded"><a href=""><span class="icon icon-arrows-2 hvr-hang"></span></a></div>
+                                            </div>
+                                            <div class="studies-conten m-top-30">
+                                                <h4><a href="">Umbrella Corporation</a></h4>
+                                                <p class="m-top-10">Objective: Eliminate the residue of black-hat methods</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="studies-item m-top-35 parent-border">
+                                            <div class="studies-feature border">
+                                                <img class="img-rounded" src="assets/images/studies-img-04.jpg" alt="">
+                                                <div class="studies-overlay img-rounded"><a href=""><span class="icon icon-arrows-2 hvr-hang"></span></a></div>
+                                            </div>
+                                            <div class="studies-conten m-top-30">
+                                                <h4><a href="">Initech</a></h4>
+                                                <p class="m-top-10">Objective: Improve site load speed &amp; functionality</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="studies-item m-top-35 parent-border">
+                                            <div class="studies-feature border">
+                                                <img class="img-rounded" src="assets/images/studies-img-05.jpg" alt="">
+                                                <div class="studies-overlay img-rounded">
+                                                    <a href="">
+                                                        <span class="icon icon-arrows-2 hvr-hang"></span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            <div class="studies-conten m-top-30">
+                                                <h4><a href="">Vehement Capital Partners </a></h4>
+                                                <p class="m-top-10">Objective: Increase nationwide sales</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-6">
+                                        <div class="studies-item m-top-35 parent-border">
+
+                                            <div class="studies-feature border">
+                                                <img class="img-rounded" src="assets/images/studies-img-06.jpg" alt="">
+                                                <div class="studies-overlay img-rounded">
+                                                    <a href=""><span class="icon icon-arrows-2 hvr-hang"></span></a>
+                                                </div>
+                                            </div>
+                                            <div class="studies-conten m-top-30">
+                                                <h4><a href="">Massive Dynamic</a></h4>
+                                                <p class="m-top-10">Objective: Increase qualified traffic</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div><!-- End off row -->
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="studies-btns text-center m-top-50">
+                                            <a href="" class="btn btn-primary btn-round">Read More</a>
+                                        </div>
+                                    </div>
+                                </div><!-- End off row -->
+                            </div><!-- End off main studies -->
+                        </div><!-- End off col-md-12 -->
+
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript files-->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="/vendor/lightbox2/js/lightbox.js"></script>
+    <script src="/js/front.js"></script>
+</div>
+</body>
+</html>

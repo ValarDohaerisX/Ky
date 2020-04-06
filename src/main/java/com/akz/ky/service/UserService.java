@@ -1,11 +1,11 @@
 package com.akz.ky.service;
 
 import com.akz.ky.pojo.UserPojo;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface UserService {
 
     boolean add(UserPojo userPojo);
@@ -16,6 +16,8 @@ public interface UserService {
 
     UserPojo checkUser(String name, String password);
 
+    boolean isExists(String name);
+
     List<UserPojo> list();
 
     List<UserPojo> list(UserPojo userPojo);
@@ -23,4 +25,6 @@ public interface UserService {
     boolean update(UserPojo userPojo);
 
     boolean delete(int uid);
+
+    boolean updateLoginTime(UserPojo userPojo);
 }

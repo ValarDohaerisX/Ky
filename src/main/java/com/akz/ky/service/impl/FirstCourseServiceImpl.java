@@ -6,6 +6,9 @@ import com.akz.ky.message.Result;
 import com.akz.ky.pojo.FirstCoursePojo;
 import com.akz.ky.service.FirstCourseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,14 +17,16 @@ import java.util.List;
  * @author lzx
  * @version 1.0
  * @date 2019/10/10 11:55
- * @Description
+ * @Description 学科门类服务类
  */
 @Service
+@CacheConfig(cacheNames = "firstCourses")
 public class FirstCourseServiceImpl implements FirstCourseService{
 
     @Autowired(required = false)
     FirstCourseMapper firstCourseMapper;
     @Override
+    @CacheEvict(allEntries = true)
     public Result add(FirstCoursePojo firstCoursePojo) {
         System.out.println("进入到添加学科信息后台");
         List<FirstCoursePojo> firstCoursePojos = firstCourseMapper.listByAll();
@@ -41,6 +46,7 @@ public class FirstCourseServiceImpl implements FirstCourseService{
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public Result delete(int id) {
         boolean flag = firstCourseMapper.delete(id);
         if (flag)
@@ -50,16 +56,19 @@ public class FirstCourseServiceImpl implements FirstCourseService{
     }
 
     @Override
+    @Cacheable(key="'schoolPojos-one-byName-'+ #p0")
     public Result<List<FirstCoursePojo>> getByName(String name) {
         return null;
     }
 
     @Override
+    @Cacheable(key="'schoolPojos-one-byCode-'+ #p0")
     public Result<FirstCoursePojo> getByCode(String code) {
         return null;
     }
 
     @Override
+    @Cacheable(key="'firstCourses-all'")
     public Result<List<FirstCoursePojo>> listByAll() {
         List<FirstCoursePojo> firstCoursePojos = firstCourseMapper.listByAll();
         if (firstCoursePojos != null){
@@ -69,6 +78,7 @@ public class FirstCourseServiceImpl implements FirstCourseService{
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public Result updateFirstCourse(FirstCoursePojo firstCoursePojo) {
         System.out.println("后台firstCoursePojo:"+firstCoursePojo);
         boolean flag = firstCourseMapper.updateFirstCourse(firstCoursePojo);

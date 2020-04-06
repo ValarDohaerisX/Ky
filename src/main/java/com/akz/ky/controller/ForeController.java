@@ -1,24 +1,32 @@
 package com.akz.ky.controller;
 
 import cn.hutool.core.util.NumberUtil;
-import cn.hutool.core.util.StrUtil;
 import com.akz.ky.mapper.DepartmentMapper;
 import com.akz.ky.message.ApiReturnCode;
 import com.akz.ky.message.Result;
 import com.akz.ky.pojo.*;
 import com.akz.ky.service.*;
-import com.mysql.jdbc.StringUtils;
+import com.akz.ky.utils.DateUtil;
+import com.akz.ky.utils.JsonXMLUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.crypto.SecureRandomNumberGenerator;
+import org.apache.shiro.crypto.hash.SimpleHash;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.HtmlUtils;
 
+import javax.servlet.http.HttpSession;
+import java.sql.Timestamp;
 import java.util.*;
 
 /**
  * @author lzx
  * @version 1.0
  * @date 2020/3/12 15:12
- * @Description
+ * @Description 用户界面处理控制类
  */
 @RestController
 public class ForeController {
@@ -35,6 +43,13 @@ public class ForeController {
     LdcodeService ldcodeService;
     @Autowired
     FirstCourseService firstCourseService;
+    @Autowired
+    UserService userService;
+    @Autowired(required = false)
+    MainTieService mainTieService;
+    @Autowired
+    ChildTieService childTieService;
+    public static DateUtil d = new DateUtil();
     @RequestMapping(value = "/search",method = RequestMethod.POST)
     public Object search(String keyword){
         if (null == keyword)
@@ -377,6 +392,136 @@ public class ForeController {
         return true;
     }
 
+    /**
+     * 用户注册接口
+     * @param user
+     * @return
+     */
+    @RequestMapping(value = "/register",method = RequestMethod.POST)
+    public Object register(@RequestBody UserPojo user){
+        String name = user.getUserLoginName();
+        String pwd = user.getUserLoginPassword();
+        name = HtmlUtils.htmlEscape(name);
+        user.setUserLoginName(name);
+        boolean exists = userService.isExists(name);
+        if (exists){
+            return Result.failure(ApiReturnCode.C_Fail,"用户名已存在，请重新填写");
+        }
+//        注册时候的时候，会通过随机方式创建盐， 并且加密算法采用 "md5", 除此之外还会进行 2次加密。
+//        这个盐，如果丢失了，就无法验证密码是否正确了，所以会数据库里保存起来。
+        String salt = new SecureRandomNumberGenerator().nextBytes().toString();
+        int times = 2;
+        String algorithmName = "md5";
+        String encodedPassword = new SimpleHash(algorithmName,pwd,salt,times).toString();
+        user.setUserLoginPassword(encodedPassword);
+        user.setSalt(salt);
+        user.setCreateDate(d.getCurrDate());
+        user.setCreateTime(d.getCurrTime());
+        user.setModifyDate(d.getCurrDate());
+        user.setModifyTime(d.getCurrTime());
+        userService.add(user);
+        return Result.success(user);
+    }
+
+    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    public Object login(@RequestBody UserPojo user, HttpSession session){
+        String name = user.getUserLoginName();
+        String password = user.getUserLoginPassword();
+        boolean exists = userService.isExists(name);
+        if (!exists){
+            return Result.failure(ApiReturnCode.C_Fail,"用户不存在！");
+        }
+//        登陆的时候， 通过 Shiro的方式进行校验
+        Subject subject = SecurityUtils.getSubject();
+        UsernamePasswordToken token = new UsernamePasswordToken(name,password);
+        try{
+            subject.login(token);
+            UserPojo userPojo = userService.get(name);
+            userPojo.setLastLoginDate(d.getCurrDate());
+            userPojo.setModifyTime(d.getCurrTime());
+            userPojo.setModifyDate(d.getCurrDate());
+            userService.updateLoginTime(userPojo);
+            session.setAttribute("user",userPojo);
+            return Result.success(userPojo);
+        }catch (AuthenticationException e){
+            return Result.failure(ApiReturnCode.C_Fail,"密码错误，请重试！");
+        }
+    }
+    @RequestMapping(value = "/exit",method = RequestMethod.POST)
+    public Object exit(HttpSession session){
+        Subject subject = SecurityUtils.getSubject();
+        if (subject.isAuthenticated())
+            subject.logout();
+//        session.removeAttribute("user");
+        return Result.success(ApiReturnCode.SUCCESS);
+    }
+
+    @RequestMapping(value = "/sendMsg",method = RequestMethod.POST)
+    public Object sendMsg(@RequestBody Map<String,Object> maps) throws Exception {
+        System.out.println("maps:"+maps);
+        UserPojo user = JsonXMLUtils.map2obj((Map<String, Object>) maps.get("user"),UserPojo.class);
+        MainTiePojo tie = JsonXMLUtils.map2obj((Map<String, Object>) maps.get("msg"),MainTiePojo.class);
+        System.out.println("send msg..");
+        System.out.println("发帖内容:"+tie);
+        System.out.println("发帖者:"+user);
+
+        tie.setCreatedTime(d.getCurrDate()+" "+d.getCurrTime());
+        tie.setUserNo(user.getUserNo());
+        tie.setUserName(user.getUserName());
+        System.out.println("组装消息体:"+tie);
+        mainTieService.add(tie);
+        return Result.success(tie);
+    }
+
+    @RequestMapping(value = "/getMsg",method = RequestMethod.POST)
+    public Object getMsg(@RequestBody UserPojo userPojo){
+        HashMap<String,Object> maps = new HashMap<>();
+        List<MainTiePojo> ties = mainTieService.getMainTie();
+        List<ChildTiePojo> childTiePojos = childTieService.getAll();
+        HashMap<Integer,HashMap<Integer,List<List<ChildTiePojo>>>> map = new HashMap<>();
+        dealChildTiePojoClass(map,childTiePojos);
+        maps.put("msgs",ties);
+        maps.put("childMsgs",map);
+        return Result.success(maps);
+    }
+
+    private void dealChildTiePojoClass(HashMap<Integer, HashMap<Integer,List<List<ChildTiePojo>>>> maps, List<ChildTiePojo> childTiePojos) {
+        HashMap<Integer,List<List<ChildTiePojo>>> map = new HashMap<>();
+        for (ChildTiePojo childTiePojo:childTiePojos) {
+            List<List<ChildTiePojo>> splitAllMsgs = new ArrayList<>();//分离后总的评论及回复
+            List<ChildTiePojo> childTiePojos1 = new ArrayList<>();
+            List<ChildTiePojo> childTiePojos2 = new ArrayList<>();
+            if (0!=childTiePojo.getChildTieNoo()){
+                continue;
+            }
+            for (ChildTiePojo childTiePojo1:childTiePojos) {
+                if (childTiePojo.getChildTieNo()==childTiePojo1.getChildTieNo() && childTiePojo1.getChildTieNoo() == 0){
+                    childTiePojos1.add(childTiePojo1);
+                }
+                if (childTiePojo.getChildTieNo()==childTiePojo1.getChildTieNoo() && childTiePojo1.getChildTieNoo() != 0){
+                    childTiePojos2.add(childTiePojo1);
+                }
+            }
+            splitAllMsgs.add(childTiePojos1);
+            splitAllMsgs.add(childTiePojos2);
+            map.put(childTiePojo.getChildTieNo(),splitAllMsgs);
+            maps.put(childTiePojo.getMainTieNo(),map);
+        }
+    }
+
+    @RequestMapping(value = "/sendChildTie",method =  RequestMethod.POST)
+    public Object sendChildTie(@RequestBody ChildTiePojo childTiePojo){
+        if (childTiePojo == null)
+            return Result.failure(ApiReturnCode.C_Fail_Insert,"后台未成功获取数据！");
+        int mainTieNo = childTiePojo.getMainTieNo();
+        MainTiePojo mainTiePojo = mainTieService.getOne(mainTieNo);
+        mainTiePojo.setLastReplyTime(d.getCurrDate()+" "+d.getCurrTime());
+        mainTiePojo.setReviewNum(mainTiePojo.getReviewNum()+1);
+        mainTieService.update(mainTiePojo);
+        childTiePojo.setCreatedTime(d.getCurrDate()+" "+d.getCurrTime());
+        childTieService.add(childTiePojo);
+        return Result.success(childTiePojo);
+    }
     public static void main(String[] args) {
         System.out.println("111");
         Map<String,String> majorIndexRequestMaps = new HashMap<>();
@@ -384,6 +529,7 @@ public class ForeController {
         majorIndexRequestMaps.put("A","郑州");
         majorIndexRequestMaps.put("B","美国");
         majorIndexRequestMaps.put("C","英国");
+        System.out.println("t:"+new Timestamp(new Date().getTime()));
 //        majorIndexRequestMaps.put("1",1);
 //        majorIndexRequestMaps.put("1",1);
 //        majorIndexRequestMaps.put("1",2);

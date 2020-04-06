@@ -54,7 +54,7 @@ public interface SchoolMapper {
     SchoolPojo getBySchoolCode (@Param("schoolCode") String schoolCode);
 
     @Select("select * from school")
-    List<SchoolPojo> getAll();
+    public List<SchoolPojo> getAll();
 
     @Select("select * from school where schoolName like concat('%',#{schoolName},'%')")
     List<SchoolPojo> getBySchoolNameLike(@Param("schoolName")String schoolName);

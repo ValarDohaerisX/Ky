@@ -31,29 +31,29 @@ public interface SchoolService {
 
     public static final String scholarship = "scholarship";
 
-    Result add(SchoolPojo schoolPojo);
+    public Result add(SchoolPojo schoolPojo);
 
-    Result update(SchoolPojo schoolPojo);
+    public Result update(SchoolPojo schoolPojo);
 
-    Result<SchoolPojo> getBySchoolNo (String schoolNo);
+    public Result<SchoolPojo> getBySchoolNo (String schoolNo);
 
-    Result<List<SchoolPojo>> getAll();
+    public Result<List<SchoolPojo>> getAll();
 
-    Result<List<SchoolPojo>> getBySchoolNameLike(String schoolName);
+    public Result<List<SchoolPojo>> getBySchoolNameLike(String schoolName);
 
-    Result<List<SchoolPojo>> getBySchoolTypeLike(String schoolType);
+    public Result<List<SchoolPojo>> getBySchoolTypeLike(String schoolType);
 
-    Result<List<SchoolPojo>> getBySchoolLevelLike(String schoolLevel);
+    public Result<List<SchoolPojo>> getBySchoolLevelLike(String schoolLevel);
 
-    Result<List<SchoolPojo>> getByAddressLike(String address);
+    public Result<List<SchoolPojo>> getByAddressLike(String address);
 
-    Result delete(String schoolNo);
+    public Result delete(String schoolNo);
 
-    Result<SchoolDetailPojo> getSchoolDetailInfo(String schoolNo);
+    public Result<SchoolDetailPojo> getSchoolDetailInfo(String schoolNo);
 
-    Result<SchoolDetailPojo> setSchoolDetailInfo(SchoolDetailRequestPojo schoolDetailRequestPojo);
+    public Result<SchoolDetailPojo> setSchoolDetailInfo(SchoolDetailRequestPojo schoolDetailRequestPojo);
 
-    LinkedHashMap<String,List<SchoolMainInfoPojo>> getSchoolMainInfoMaps(List<SchoolMainInfoPojo> schoolMainInfoPojos);
+    public LinkedHashMap<String,List<SchoolMainInfoPojo>> getSchoolMainInfoMaps(List<SchoolMainInfoPojo> schoolMainInfoPojos);
 
-    Result<SchoolPojo> getBySchoolCode(String schoolCode);
+    public Result<SchoolPojo> getBySchoolCode(String schoolCode);
 }

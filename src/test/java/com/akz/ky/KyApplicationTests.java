@@ -4,13 +4,11 @@ import com.akz.ky.controller.SchoolController;
 import com.akz.ky.mapper.ManagerMapper;
 import com.akz.ky.mapper.SchoolMainInfoMapper;
 import com.akz.ky.mapper.SchoolMapper;
-import com.akz.ky.pojo.LdcodePojo;
-import com.akz.ky.pojo.ManagerPojo;
-import com.akz.ky.pojo.SchoolMainInfoPojo;
-import com.akz.ky.pojo.SchoolPojo;
+import com.akz.ky.pojo.*;
 import com.akz.ky.service.LdcodeService;
 import com.akz.ky.service.SchoolService;
-import org.junit.jupiter.api.Test;
+import com.akz.ky.service.UserService;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -35,6 +33,14 @@ class KyApplicationTests {
     SchoolMainInfoMapper schoolMainInfoMapper;
     @Autowired
     SchoolService schoolService;
+    @Autowired
+    UserService userService;
+
+    @Test
+    public void test6(){
+        List<UserPojo> userPojos = userService.list();
+        System.out.println("user:"+userPojos);
+    }
     @Test
     public void test5(){
         List<Integer> i = new ArrayList<>();

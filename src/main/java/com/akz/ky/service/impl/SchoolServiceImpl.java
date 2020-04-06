@@ -7,6 +7,9 @@ import com.akz.ky.pojo.*;
 import com.akz.ky.service.SchoolService;
 import com.akz.ky.utils.DateUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -22,6 +25,7 @@ import static javafx.scene.input.KeyCode.T;
  * @Description
  */
 @Service
+@CacheConfig(cacheNames = "schoolPojos")//表示 数据在 redis 中都放在 schoolPojos 这个分组里。
 public class SchoolServiceImpl implements SchoolService {
     @Autowired(required = false)
     SchoolMapper schoolMapper;
@@ -39,6 +43,7 @@ public class SchoolServiceImpl implements SchoolService {
     private static DateUtil dateUtil = new DateUtil();
 
     @Override
+    @CacheEvict(allEntries = true)
     public Result add(SchoolPojo schoolPojo) {
         if (schoolPojo == null)
             return Result.failure(ApiReturnCode.C_Fail);
@@ -52,6 +57,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public Result update(SchoolPojo schoolPojo) {
         if (schoolPojo == null)
             return Result.failure(ApiReturnCode.C_Fail);
@@ -62,6 +68,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @Cacheable(key="'schoolPojos-one-bySchoolNo-'+ #p0")
     public Result<SchoolPojo> getBySchoolNo(String schoolNo) {
         SchoolPojo bySchoolNo = schoolMapper.getBySchoolNo(schoolNo);
         if (bySchoolNo == null)
@@ -70,6 +77,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @Cacheable(key="'schoolPojos-all'")
     public Result<List<SchoolPojo>> getAll() {
         List<SchoolPojo> all = schoolMapper.getAll();
         if (all == null || all.size() == 0){
@@ -79,6 +87,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @Cacheable(key="'schoolPojos-schoolNameLike-'+ #p0")
     public Result<List<SchoolPojo>> getBySchoolNameLike(String schoolName) {
         List<SchoolPojo> bySchoolNameLike = schoolMapper.getBySchoolNameLike(schoolName);
         if (bySchoolNameLike == null || bySchoolNameLike.size() == 0){
@@ -88,6 +97,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @Cacheable(key="'schoolPojos-schoolTypeLike-'+ #p0")
     public Result<List<SchoolPojo>> getBySchoolTypeLike(String schoolType) {
         List<SchoolPojo> bySchoolTypeLike = schoolMapper.getBySchoolTypeLike(schoolType);
         if (bySchoolTypeLike == null || bySchoolTypeLike.size() == 0){
@@ -97,6 +107,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @Cacheable(key="'schoolPojos-schoolLevelLike-'+ #p0")
     public Result<List<SchoolPojo>> getBySchoolLevelLike(String schoolLevel) {
         List<SchoolPojo> bySchoolLevelLike = schoolMapper.getBySchoolLevelLike(schoolLevel);
         if (bySchoolLevelLike == null || bySchoolLevelLike.size() == 0){
@@ -106,6 +117,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @Cacheable(key="'schoolPojos-schoolAddressLike-'+ #p0")
     public Result<List<SchoolPojo>> getByAddressLike(String address) {
         List<SchoolPojo> byAddressLike = schoolMapper.getByAddressLike(address);
         checkIfEmpty(byAddressLike);
@@ -113,6 +125,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public Result delete(String schoolNo) {
         boolean flag = schoolMapper.delete(schoolNo);
         if (!flag)
@@ -121,6 +134,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @Cacheable(key="'schoolPojos-schoolDetailInfos-'+ #p0")
     public Result<SchoolDetailPojo> getSchoolDetailInfo(String schoolNo) {
         SchoolPojo bySchoolNo = schoolMapper.getBySchoolNo(schoolNo);
         SchoolDetailPojo schoolDetailPojo = new SchoolDetailPojo();
@@ -147,6 +161,7 @@ public class SchoolServiceImpl implements SchoolService {
         return Result.success(schoolDetailPojo);
     }
     @Override
+    @CacheEvict(allEntries = true)
     public Result setSchoolDetailInfo(SchoolDetailRequestPojo schoolDetailRequestPojo) {
         SchoolDetailPojo newSchoolDetailPojo = new SchoolDetailPojo();
         SchoolPojo newSchoolPojo = schoolDetailRequestPojo.getSchoolPojo();
@@ -324,7 +339,8 @@ public class SchoolServiceImpl implements SchoolService {
         majorPojo.setSecondCourseNo(secondCourseNo);
     }
 
-    private boolean dealDepartmentInfo(List<DepartmentPojo> oriDepartmentPojos, List<DepartmentPojo> newDepartmentPojos,String schoolNo) {
+    @CacheEvict(allEntries = true)
+    public boolean dealDepartmentInfo(List<DepartmentPojo> oriDepartmentPojos, List<DepartmentPojo> newDepartmentPojos,String schoolNo) {
             if (newDepartmentPojos.size() == 0)
                 return true;
             //先处理没有ID的数据
@@ -468,8 +484,8 @@ public class SchoolServiceImpl implements SchoolService {
         return true;
     }
 
-
-    private boolean addDepartmentInfo(List<DepartmentPojo> newDepartmentPojos,List<String> errorMajorCodeList) {
+    @CacheEvict(allEntries = true)
+    public boolean addDepartmentInfo(List<DepartmentPojo> newDepartmentPojos,List<String> errorMajorCodeList) {
         for (DepartmentPojo department : newDepartmentPojos) {
             if (department.getMajorCode().length() != 6){
                 errorMajorCodeList.add("专业代码: "+department.getMajorCode()+",专业名称: "+department.getMajorName());
@@ -497,7 +513,8 @@ public class SchoolServiceImpl implements SchoolService {
         return true;
     }
 
-    private boolean dealSchoolMainInfo(List<SchoolMainInfoPojo> oriSchoolDetailPojoSchoolMainInfoPojos, List<SchoolMainInfoPojo> newSchoolDetailPojoSchoolMainInfoPojos, String schoolNo) {
+    @CacheEvict(allEntries = true)
+    public boolean dealSchoolMainInfo(List<SchoolMainInfoPojo> oriSchoolDetailPojoSchoolMainInfoPojos, List<SchoolMainInfoPojo> newSchoolDetailPojoSchoolMainInfoPojos, String schoolNo) {
         if (oriSchoolDetailPojoSchoolMainInfoPojos.size() == 0) {
             //若数据库中没有此学校的明细信息，则直接插入数据
             for (SchoolMainInfoPojo schoolMainInfoPojo:newSchoolDetailPojoSchoolMainInfoPojos) {
@@ -574,8 +591,10 @@ public class SchoolServiceImpl implements SchoolService {
         }
         return true;
     }
+
+    @CacheEvict(allEntries = true)
     //处理匹配到的院校明细信息
-    private boolean dealMatchSchoolMainInfo(List<SchoolMainInfoPojo> oriEntryValue, List<SchoolMainInfoPojo> newEntryValue) {
+    public boolean dealMatchSchoolMainInfo(List<SchoolMainInfoPojo> oriEntryValue, List<SchoolMainInfoPojo> newEntryValue) {
         Iterator<SchoolMainInfoPojo> iterator = oriEntryValue.iterator();
         Iterator<SchoolMainInfoPojo> iterator1 = newEntryValue.iterator();
         while(iterator.hasNext()){
@@ -650,6 +669,7 @@ public class SchoolServiceImpl implements SchoolService {
     }
 
     @Override
+    @Cacheable(key="'schoolPojos-bySchoolCode-'+ #p0")
     public Result<SchoolPojo> getBySchoolCode(String schoolCode) {
         SchoolPojo bySchoolCode = schoolMapper.getBySchoolCode(schoolCode);
         return Result.success(bySchoolCode);

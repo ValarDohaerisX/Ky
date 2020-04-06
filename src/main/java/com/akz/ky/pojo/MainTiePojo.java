@@ -15,30 +15,33 @@ import java.sql.Timestamp;
 public class MainTiePojo {
 
     //主键
-    int id;
+    int mainTieNo;
 
     //标题
-    String Title;
+    String title;
 
     //内容
     String content;
 
     //用户id
-    int userId;
+    int userNo;
+
+    //用户名
+    String userName;
 
     //评论数量
     int reviewNum;
 
     //点赞数量
-    int GoodNum;
+    int goodNum;
 
     //踩数量
-    int BadNum;
+    int badNum;
 
     //帖子创建时间
-    Timestamp createdTime;
+    String createdTime;
 
     //最后一次回帖时间
-    Timestamp lastReplyTime;
+    String lastReplyTime;
 
 }

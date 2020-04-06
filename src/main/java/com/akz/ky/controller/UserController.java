@@ -28,7 +28,7 @@ public class UserController {
     @Autowired(required = false)
     ActivityService activityService;
 
-    @PostMapping("login")
+//    @PostMapping("login")
     public String login(@RequestBody UserPojo userPojo, HttpServletRequest request){
 //        UserPojo user = userService.get(userPojo.getName());
 //        if (!user.getPassword().equals("")&&user.getPassword().equals(userPojo.getPassword())){
@@ -48,8 +48,8 @@ public class UserController {
 //        }
         return "";
     }
-    @PostMapping("register")
-    public String register(@RequestBody UserPojo userPojo){
+//    @PostMapping("register")
+//    public String register(@RequestBody UserPojo userPojo){
 //        if (userPojo == null)
 //            return "输入错误，请重新输入";
 //        UserPojo user = userService.get(userPojo.getName());
@@ -71,8 +71,8 @@ public class UserController {
 //            return "用户已存在";
 //        }
 
-        return "";
-    }
+//        return "";
+//    }
 
     public static void main(String[] args) {
         ArrayList<String> list = new ArrayList<>();
