@@ -3,6 +3,7 @@ package com.akz.ky.pojo;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author AKZ
@@ -15,26 +16,25 @@ import java.util.Date;
 public class ChildTiePojo {
 
     //主键
-    int id;
+    int childTieNo;
 
     //回帖内容
-    String content;
-
-    //点赞数量
-    int goodNum;
-
-    //回帖时间
-    Date createdTime;
-
-    int reviewNum;
+    String comment;
 
     //用户id
-    int userId;
-
+    int userNo;
+    //用户id
+    String userName;
+    //点赞数量
+    int good;
+    //差评数量
+    int bad;
+    //回帖时间
+    String createdTime;
     //主贴id
-    int mainTieId;
+    int mainTieNo;
 
     //回复层主id
-    int childTieId;
+    int childTieNoo;
 
 }

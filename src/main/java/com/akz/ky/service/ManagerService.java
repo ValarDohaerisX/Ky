@@ -2,6 +2,8 @@ package com.akz.ky.service;
 
 import com.akz.ky.message.Result;
 import com.akz.ky.pojo.ManagerPojo;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.Cacheable;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -18,6 +20,7 @@ public interface ManagerService {
     Result confirmReg(int id);
 
     Result<List<ManagerPojo>> confirmToRegList();
+
 
     Result<List<ManagerPojo>> allManaList();
 

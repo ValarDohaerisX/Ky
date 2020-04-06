@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>考研信息交流平台</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <!-- Bootstrap CSS-->
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.css">
+    <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
+    <!-- Font Awesome CSS-->
+    <link rel="stylesheet" href="vendor/font-awesome/css/font-awesome.min.css">
+<!--    <script src="https://how2j.cn/study/js/jquery/2.0.0/jquery.min.js"></script>-->
+<!--    <link href="https://how2j.cn/study/css/bootstrap/3.3.6/bootstrap.min.css" rel="stylesheet">-->
+<!--    <script src="https://how2j.cn/study/js/bootstrap/3.3.6/bootstrap.min.js"></script>-->
+    <!-- Google fonts - Poppins-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,600">
+    <!-- Lightbox-->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/js/axios.min.js"></script>
+    <script src="/js/vue.min.js"></script>
+    <link rel="stylesheet" href="vendor/lightbox2/css/lightbox.css">
+    <!-- Custom font icons-->
+    <link rel="stylesheet" href="css/fontastic.css">
+    <!-- theme stylesheet-->
+    <link rel="stylesheet" href="css/style.default.css" id="theme-stylesheet">
+    <!-- Custom stylesheet - for your changes-->
+    <link rel="stylesheet" href="css/custom.css">
+    <!-- Favicon-->
+    <link rel="shortcut icon" href="img/favicon.png">
+    <!-- Tweaks for older IEs--><!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script><![endif]-->
+</head>
+<body>
+<div id="workingArea" >
+    <div th:fragment="html">
+        <script type="text/javascript">
+            $(function(){
+
+                var data4Vue = {
+                    uri:'register',
+                    loginUser:{userLoginName:'', userLoginPassword:''},
+                    user:{userNo:0,userLoginName:'', userLoginPassword:'', repeatpassword:'',repeatPwd:'',userName:'',userSex:'',userCity:'',userContact:'',userSchoolName:'',userMajorName:'',userTagetSchoolName:'',userTagetMajorlName:''},
+                    showUser:false,
+                    showLogin:true,
+                    currUser:'',
+                    msg:{mainTieNo:0,title:'',content:'', userNo:0, userName:'',reviewNum:0, GoodNum:0, BadNum:0, createdTime:'', lastReplyTime:''},
+                    msgs:[],//初始化页面时，总帖子集合
+                    childMsg:{childTieNo:0,comment:'',userNo:0,userName:'',good:0,bad:0,createdTime:'',reviewNum:0,mainTieNo:0,childTieNoo:0},//评论
+                    childMsgs:[],//所有贴的全部评论及回复
+                    childDetailMsgs:[],//特定贴的全部评论及回复
+                    childDetailMsgss:[],//
+                    showMsgDetail:false,//展示评论明细页面
+                    comment:'',//对某特定帖子进行回复的内容
+                    currUser:{},//回帖的用户(登陆者，评论自己，对评论进行评论)
+                    showCommentChildInput:false,//是否显示回复评论输入框
+                };
+                //ViewModel
+                var vue = new Vue({
+                    el: '#workingArea',
+                    data: data4Vue,
+                    mounted:function(){ //mounted　表示这个 Vue 对象加载成功了
+                        this.load();
+                    },
+                    methods: {
+                        load:function(){
+                            console.log("进入方法...");
+                            //获取session
+                            var user= '[[${session.user}]]';
+                            console.log("load.user:"+user);
+                            console.log("load.user type:"+typeof user);
+                            if (user!=''){
+                                this.showUser = true;
+                                this.showLogin = false;
+                            }else{
+                                this.showUser = false;
+                                this.showLogin = true;
+                            }
+                            var url = "/getMsg";
+                            axios.post(url,this.user).then(function(response) {
+                                var data = response.data.body;
+                                vue.msgs = data.msgs;
+                                vue.childMsgs = data.childMsgs;
+                            });
+                            console.log("退出方法...");
+                        },
+                        exit:function(){
+                            var url = "/exit";
+                            axios.post(url,this.user).then(function(response) {
+                                var data = response.data;
+                            });
+                            var user= '[[${session.user}]]';
+                            console.log("user:"+user);
+                            vue.showUser = false;
+                            vue.showLogin = true;
+                            vue.msg.content = '';
+                            vue.msg.title = '';
+                        },
+                        login:function(){
+                            var url = "/login";
+                            if(0==this.loginUser.userLoginName.length){
+                                alert("请输入用户名");
+                                return;
+                            }
+                            if(0==this.loginUser.userLoginPassword.length){
+                                alert("请输入密码");
+                                return;
+                            }
+                            axios.post(url,this.loginUser).then(function(response) {
+                                console.log("进入方法...");
+                                var data = response.data;
+                                var code = data.returnCode.code;
+                                var msg = data.returnCode.desc;
+                                console.log("response.data:"+JSON.stringify(response.data));
+                                if (code == 1000){
+                                    vue.user = data.body;
+                                    alert("登录成功");
+                                    vue.showUser = true;
+                                    vue.showLogin = false;
+                                }else{
+                                    alert(msg);
+                                }
+                                vue.loginUser.userLoginName ='';
+                                vue.loginUser.userLoginPassword = '';
+                                console.log("退出方法...");
+                            });
+                        },
+                        register:function () {
+                            var url =  this.uri;
+                            if(0==this.user.userLoginName.length){
+                                alert("请输入用户名");
+                                return;
+                            }
+                            if(0==this.user.userLoginPassword.length){
+                                alert("请输入密码");
+                                return;
+                            }
+                            if(0==this.user.repeatPwd.length){
+                                alert("请输入重复密码");
+                                return;
+                            }
+                            if(this.user.userLoginPassword !=this.user.repeatPwd){
+                                alert("重复密码不一致");
+                                return;
+                            }
+                            axios.post(url,this.user).then(function(response) {
+                                console.log("进入方法...");
+                                var data = response.data;
+                                var code = data.returnCode.code;
+                                var msg = data.returnCode.desc;
+                                vue.user = data.body;
+                                if (code == 1000){
+                                    alert("注册成功，请重新登录！");
+                                    $("#register").hide();
+                                }else{
+                                    alert("注册失败，请重新注册！");
+                                    $("#register").hide();
+                                }
+                                console.log("退出方法...");
+                            });
+                        },
+                        sendMsg:function(){
+                            var url = "/sendMsg";
+                            console.log("send msg start ....");
+                            if(0==this.msg.title.length){
+                                alert("请输入标题");
+                                return;
+                            }
+                            if(0==this.msg.content.length){
+                                alert("请输入内容");
+                                return;
+                            }
+                            var user= '[[${session.user}]]';
+                            console.log("send msg.user:"+user);
+                            console.log("send msg object:"+JSON.stringify(this.msg));
+                            console.log("send msg enter back");
+                            if (vue.user.userNo == ''){
+                                alert("请先登录用户，再进行操作");
+                                return;
+                            }
+                            var msg;
+                            var user;
+                            // var params = [this.msg,this.user];
+                            var params = {"msg":this.msg,"user":this.user};
+                            // params = JSON.stringify(params);
+                            // console.log("params:"+JSON.stringify(params));
+                            // console.log("params.type:"+typeof params);
+                            // var data = Qs.stringify({"msg":this.msg,"user":this.user});
+                            console.log("params:"+params);
+                            var headers = {"Content-Type":"application/json;charset=utf-8"};
+                            axios.post(url,params).then(function(response) {
+                                var data = response.data;
+                                console.log("返回的数据:"+JSON.stringify(data));
+                                vue.msg.content = '';
+                                vue.msg.title = '';
+                            });
+
+                        },
+                        showMsgDetailButton:function () {
+                            var mainTieNo = $("#showMsgDetailId").attr("value");
+                            for (let i = 0; i < vue.msgs.length; i++) {
+                                var msg = vue.msgs[i];
+                                if (mainTieNo == msg.mainTieNo){
+                                    vue.msg = msg; //主贴标题及内容显示
+                                }
+                            }
+                            console.log("展示vue.childMsgs:"+JSON.stringify(vue.childMsgs));
+                            console.log("vue.childMsgs.length:"+vue.childMsgs.length);
+                            console.log("vue.childMsgs['1']:"+JSON.stringify(vue.childMsgs['1']));//代表1号这个帖子
+                            console.log("vue.childMsgs['1'].length:"+JSON.stringify(vue.childMsgs['1'].length));
+                            console.log("vue.childMsgs['1'][1]:"+JSON.stringify(vue.childMsgs['1'][1]));//代表1号帖子1号评论
+                            console.log("vue.childMsgs['1'][2]:"+JSON.stringify(vue.childMsgs['1'][2]));//代表1号帖子2号评论
+                            console.log("vue.childMsgs['1'][1][0]:"+JSON.stringify(vue.childMsgs['1'][1][0]));//代表1号帖子1号评论
+                            console.log("vue.childMsgs['1'][2][0]:"+JSON.stringify(vue.childMsgs['1'][2][0]));//代表1号帖子2号评论
+                            // var id = mainTieNo;
+                            vue.childDetailMsgs = vue.childMsgs[mainTieNo];
+                            console.log("vue.childMsgs['1']:"+JSON.stringify(vue.childMsgs[mainTieNo]));
+                            console.log("vue.childMsgs['1']['1'].length:"+JSON.stringify(vue.childMsgs[mainTieNo]['1'].length));
+
+                            console.log("mainTieNo:"+mainTieNo);
+                            console.log("vue.childDetailMsgs[1]:"+JSON.stringify(vue.childDetailMsgs[1]));
+                            console.log("vue.childDetailMsgs[2]:"+JSON.stringify(vue.childDetailMsgs[2]));
+                            console.log("vue.childDetailMsgs[1][0]:"+JSON.stringify(vue.childDetailMsgs[1][0]));
+                            console.log("vue.childDetailMsgs[1][1]:"+JSON.stringify(vue.childDetailMsgs[1][1]));
+                            vue.showMsgDetail = true;
+
+                        },
+                        closeMsgDetailButton:function () {
+                            vue.showMsgDetail = false;//隐藏明细评论页面
+                            vue.childDetailMsgs = [];//置空特定贴全部评论内容
+                            vue.msg = {};//置空特定帖标题及内容
+                        },
+                        commentButton:function() {
+                            var msg = vue.msg;
+                            var user = vue.user;
+                            if (0==user.userNo){
+                                alert("请先登录再操作！");
+                                return;
+                            }
+                            if (msg.userNo!=0){
+                                console.log("comment:"+vue.childMsg.comment);
+                                if (0!=vue.childMsg.comment.length){
+                                    vue.childMsg.userNo = user.userNo;
+                                    vue.childMsg.userName = user.userName;
+                                    vue.childMsg.mainTieNo = msg.mainTieNo;
+                                    vue.childMsg.childTieNoo = 0;
+                                    var url = "/sendChildTie";
+                                    axios.post(url,vue.childMsg).then(function(response) {
+                                        var data = response.data.body;
+                                        console.log("发送评论响应后的data:"+JSON.stringify(data));
+                                        var mainTieNo = data.mainTieNo;
+                                        var childTieNoo = data.childTieNoo;
+                                        var childTieNo = data.childTieNo;
+                                        if (childTieNoo==0){
+                                            // vue.childMsgs['1'][1]
+
+                                            vue.childDetailMsgs[childTieNo] = [];
+                                            vue.childDetailMsgs[childTieNo][0] = [];
+                                            vue.childDetailMsgs[childTieNo][1] = [];
+                                            vue.childDetailMsgs[childTieNo][0].push(data);
+                                            var no = childTieNo+"";
+                                            var list1 = [];
+                                            var list2 = [];
+                                            var list0 = [];
+                                            list1.push(data);
+                                            list0.push(list1);
+                                            list0.push(list2);
+                                            Vue.set(vue.childDetailMsgs,no,list0);
+                                            console.log("vue.childDetailMsgs["+childTieNo+"]:"+JSON.stringify(vue.childDetailMsgs[childTieNo]));
+                                            // vue.childDetailMsgs = ;
+                                            this.$forceUpdate()//强制重新渲染视图就行了
+
+                                            vue.showCommentChildInput = false;
+                                        }
+                                        // console.log("sendChildTie ->data:"+JSON.stringify(data));
+                                        // vue.childDetailMsgs.push(data);
+                                    });
+                                }else{
+                                    alert("评论不能为空！");
+                                    return;
+                                }
+                            }
+                            // vue.childMsg.comment = '';
+                            vue.childMsg = {};
+                        },
+                        showCommentChildButton:function (e) {
+                            // var childTieNo = $(this).attr("value");
+                            var childTieNo = e.target.getAttribute('value');
+                            console.log("childTieNoo:"+childTieNo);
+                            vue.childMsg.childTieNoo = childTieNo;
+                            $("div.showCommentChildClass[id='"+childTieNo+"']").toggle();
+                            // vue.showCommentChildInput = true;
+                        },
+                        commentChildButton:function () {
+                            var msg = vue.msg;
+                            var user = vue.user;
+                            if (0==user.userNo){
+                                alert("请先登录再操作！");
+                                return;
+                            }
+                            if (msg.userNo!=0){
+                                console.log("comment:"+vue.comment);
+                                if (0!=vue.comment.length){
+                                    vue.childMsg.userNo = user.userNo;
+                                    vue.childMsg.userName = user.userName;
+                                    vue.childMsg.mainTieNo = msg.mainTieNo;
+                                    vue.childMsg.comment = vue.comment;
+                                    var url = "/sendChildTie";
+                                    axios.post(url,vue.childMsg).then(function(response) {
+                                        var data = response.data.body;
+                                        var mainTieNo = data.mainTieNo;
+                                        var childTieNoo = data.childTieNoo;
+                                        if (childTieNoo!=0){
+                                            // vue.childMsgs['1'][1]
+                                            vue.childDetailMsgs[childTieNoo][1].push(data);
+                                        }
+                                        console.log("sendChildTie ->data:"+JSON.stringify(data));
+                                        // vue.childDetailMsgs.push(data);
+                                    });
+
+                                }else{
+                                    alert("评论不能为空！");
+                                    return;
+                                }
+                            }
+                            vue.showCommentChildInput = false;
+                            vue.childMsg.comment = '';
+                            vue.childMsg = {};
+                        }
+                    },
+                    watch:{
+
+                    }
+                });
+            });
+            Vue.filter("subStringFilter", function(value, start, end){
+                if (!value)
+                    return '';
+                return value.substring(start,end);
+            });
+            // 解析地址栏中的参数
+            function getUrlParms(para){
+                var search=location.search; //页面URL的查询部分字符串
+                var arrPara=[]; //参数数组。数组单项为包含参数名和参数值的字符串，如“para=value”
+                var arrVal=[]; //参数值数组。用于存储查找到的参数值
+
+                if(search!=""){
+                    var index=0;
+                    search=search.substr(1); //去除开头的“?”
+                    arrPara=search.split("&");
+
+                    for(i in arrPara){
+                        var paraPre=para+"="; //参数前缀。即参数名+“=”，如“para=”
+                        if(arrPara[i].indexOf(paraPre)==0&& paraPre.length<arrPara[i].length){
+                            arrVal[index]=decodeURI(arrPara[i].substr(paraPre.length)); //顺带URI解码避免出现乱码
+                            index++;
+                        }
+                    }
+                }
+
+                if(arrVal.length==1){
+                    return arrVal[0];
+                }else if(arrVal.length==0){
+                    return null;
+                }else{
+                    return arrVal;
+                }
+            }
+        </script>
+    </div>
+    <!-- navbar-->
+    <header class="header">
+        <nav class="navbar navbar-expand-lg fixed-top">
+            <div class="container">
+                <!-- <a href="./" class="navbar-brand"><img src="img/logo.svg" alt="" class="img-fluid">考研信息交流平台</a> -->
+                <!-- <a href="#" >考研信息交流平台</a> -->
+                <h2>考研信息交流平台</h2>
+                <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler navbar-toggler-right">Menu<i class="fa fa-bars ml-2"></i></button>
+                <div id="navbarSupportedContent" class="collapse navbar-collapse">
+                    <ul class="navbar-nav ml-auto">
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="index" class="nav-link ">首页</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="schoolIndex" class="nav-link">考研院校</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="majorIndex" class="nav-link">考研专业</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="schoolIndex" class="nav-link active">论坛专区</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="video" class="nav-link">视频专区</a></li>
+                        <!-- Link-->
+                        <li class="nav-item"> <a href="text.html" class="nav-link"></a></li>
+                        <li class="nav-item dropdown">
+                            <a id="pages" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" class="nav-link dropdown-toggle">个人设置</a>
+                            <div class="dropdown-menu">
+                                <a href="majorIndex.html" class="dropdown-item">个人资料</a>
+                                <a href="contact.html" class="dropdown-item">退出登录</a>
+                                <a href="text.html" class="dropdown-item">未开发</a>
+                            </div>
+                        </li>
+
+                        <li class="nav-item"> <a href="#nowhere" class="nav-link" v-show="showUser">欢迎你,<span style="color: red;font-size: 18px;">{{user.userName}}</span></a></li>
+                        <li class="nav-item"> <a href="#nowhere" class="nav-link" @click="exit" v-show="showUser">退出</a></li>
+                    </ul>
+
+                    <a href="#" data-toggle="modal" data-target="#login" class="btn btn-primary navbar-btn ml-0 ml-lg-3" v-show="showLogin">登录 </a>
+                    <a href="#" data-toggle="modal" data-target="#register" class="btn btn-success navbar-btn ml-0 ml-lg-3" v-show="showLogin">注册 </a>
+
+                </div>
+            </div>
+        </nav>
+    </header>
+    <!-- Login Modal-->
+    <div id="login" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade bd-example-modal-lg">
+        <div role="document" class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="background-color: #ccc;">
+                <div class="modal-header border-bottom-0">
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body p-4 p-lg-5">
+                    <form action="#" class="login-form text-left">
+                        <div class="form-group mb-4">
+                            <label>账号</label>
+                            <input type="text" v-model="loginUser.userLoginName" placeholder="请输入你的账号..." class="form-control">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>密码</label>
+                            <input type="password" v-model="loginUser.userLoginPassword" placeholder="请输入你的密码..." class="form-control" autocomplete>
+                        </div>
+                        <div class="form-group">
+                            <input type="button" value="登录" class="btn btn-primary" @click="login" data-dismiss="modal" aria-label="Close" >
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- register Modal-->
+    <div id="register" tabindex="-1" role="dialog" aria-hidden="true" class="modal fade bd-example-modal-lg">
+        <div role="document" class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content" style="background-color: #ccc;">
+                <div class="modal-header border-bottom-0">
+                    <button type="button" data-dismiss="modal" aria-label="Close" class="close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body p-4 p-lg-5">
+                    <form action="#" class="login-form text-left">
+                        <div class="form-group mb-4">
+                            <label>账号</label>
+                            <input type="text" v-model="user.userLoginName" placeholder="请输入你的账号..." class="form-control" maxlength="10">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>用户名</label>
+                            <input type="text" v-model="user.userName" placeholder="请输入你的用户名..." class="form-control" maxlength="10">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>密码</label>
+                            <input type="password" v-model="user.userLoginPassword" placeholder="请输入你的密码..." class="form-control" maxlength="10">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>确认密码</label>
+                            <input type="password" v-model="user.repeatPwd" placeholder="请重复输入你的密码..." class="form-control" maxlength="10">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>性别</label>
+                            <input type="text" v-model="user.userSex" placeholder="请输入你的性别..." class="form-control" maxlength="1">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>所在城市</label>
+                            <input type="text" v-model="user.userCity" placeholder="请输入你的所在城市" class="form-control" maxlength="11">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>联系方式</label>
+                            <input type="text" v-model="user.userContact" oninput="value=value.replace(/^[1][3,4,5,6,7,8,9][0-9]{9}$/,'')" placeholder="请输入你的联系方式(可选)" class="form-control" maxlength="11">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>所在大学</label>
+                            <input type="text" v-model="user.userSchoolName" placeholder="请输入你的大学" class="form-control" maxlength="9">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>所在专业</label>
+                            <input type="text" v-model="user.userMajorName" placeholder="请输入你的所在专业" class="form-control" maxlength="15">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>目标院校</label>
+                            <input type="text" v-model="user.userTagetSchoolName" placeholder="请输入你的目标院校(可选)" class="form-control" maxlength="9">
+                        </div>
+                        <div class="form-group mb-4">
+                            <label>目标专业</label>
+                            <input type="text" v-model="user.userTagetMajorlName" placeholder="请输入你的目标专业(可选)" class="form-control" maxlength="15">
+                        </div>
+                        <div class="form-group">
+                            <input type="button" value="注册" class="btn btn-primary" @click="register" data-dismiss="modal" aria-label="Close">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Hero Section-->
+    <section class="hero" style="">
+        <div class="container mb-5">
+            <div class="row align-items-center">
+
+                <div class="col-lg-12">
+
+                    <div style="margin-top: -50px;">
+<!--                        <p :value="session.user"></p>-->
+<!--                        <p th:text="${session.user.userContact}"></p>-->
+                        <a class="btn btn-info" role="button" data-toggle="collapse" href="#dota" aria-expanded="false" aria-controls="collapseExample" >
+                            点击发帖
+                        </a>
+                        <div class="collapse" id="dota">
+                            <form action="#" class="contact-form text-left">
+                                <br/><br/>
+                                <div class="form-group mb-4">
+<!--                                    <label>标题<sup class="text-primary">&#10033;</sup></label>-->
+                                    <input type="text" v-model="msg.title" placeholder="请输入标题..." class="form-control" style="width: auto">
+                                </div>
+                                <div class="form-group mb-4">
+<!--                                    <label>内容<sup class="text-primary">&#10033;</sup></label>-->
+                                    <input type="text" v-model="msg.content" placeholder="请输入内容" class="form-control" style="width: 50%">
+                                </div>
+                                <div class="form-group">
+                                    <input type="button" value="发送" class="btn btn-primary" v-on:click="sendMsg">
+                                </div>
+                            </form>
+
+                        </div>
+                    </div>
+                    <header class="section-header text-left mb-5 mt-5">
+                        <h2 class="mt-5">精华帖子</h2>
+                        <!--              <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.</p>-->
+                    </header>
+                    <div id="accordion2" class="faq accordion accordion-custom">
+                        <!-- question-->
+                        <div class="card" v-for="m in msgs">
+                            <div id="headingOneAlt" class="card-header">
+                                <h4 class="mb-0 accordion-heading">
+                                    <button data-toggle="collapse" data-target="#collapseOneAlt" aria-expanded="false" aria-controls="collapseOneAlt" class="d-flex align-items-center collapsed">
+                                        <i class="icon-light-bulb"></i>
+                                        <span>{{m.title}}</span>
+                                        <span style="    margin-left: 120px;">发帖时间 : {{m.createdTime}}</span>
+                                        <span style="margin-left: 40px;">
+                                            <span class="glyphicon glyphicon-thumbs-up" style="display: inline;">99</span>
+                                            <span class=" glyphicon glyphicon-thumbs-down" style="margin-left: 20px;display: inline;">0</span>
+                                        </span>
+                                    </button>
+
+<!--                                    <p>111</p>-->
+                                </h4>
+                            </div>
+                            <div id="collapseOneAlt" aria-labelledby="headingOneAlt" data-parent="#accordion2" class="collapse">
+                                <div class="card-body">{{m.content}}
+                                    <ul style="list-style: none">
+                                        <li id="open-button" class="side-menu" style="    width: 11%;    position: relative;left: 900px;top: -40px;">
+                                            <a href="#nowhere" @click="showMsgDetailButton" :value="m.mainTieNo" id="showMsgDetailId">
+                                                <span style="display: inline-block;">
+                                                    <span class="icon-01"></span>
+                                                    <span class="icon-02"></span>
+                                                    <span class="icon-03"></span>
+                                                </span>
+                                                <span>详情</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!--                    发帖详情-->
+                        <div class="side on" v-show="showMsgDetail" style="margin-top: 65px;">
+                            <a href="#nowhere" id="close-button" class="close-side text-center" @click="closeMsgDetailButton" style="    margin-top: 89px; position: fixed;left: 540px;height: 100%;padding-top: 150px;">
+                                <span class="icon-01"></span>
+                                <span class="icon-02"></span>
+                                <span class="icon-03"></span>
+                                <span style="margin: 0 auto;"> 关  闭 </span>
+                            </a>
+                            <div class="side-menu-area fix">
+                                <div class="main-blog-area parent-border">
+                                    <div class="newest-blog-item border">
+                                        <div class="blog-feature">
+<!--                                            <img class="img-rounded" src="/img/blog-feature-01.jpg" alt="">-->
+                                            <div class="blog-feature-overlay">
+                                                <a href=""><span class="icon icon-link"></span></a>
+                                            </div>
+                                        </div>
+
+
+                                        <h4 class="text-black m-top-30">{{msg.title}}</h4>
+                                        <p class="text-black">{{msg.content}}</p>
+                                        <div class="newest-tips-date m-top-20">
+                                            <div class="newest-tips-date-time pull-right">
+                                                <div class="newest-author">
+                                                    <p class="text-black">by <span class="text-primary">{{msg.userName}}</span></p>
+                                                </div>
+                                                <span style="float: right;"><i class="glyphicon glyphicon-calendar"></i>{{msg.createdTime | subStringFilter(0,10)}}</span>
+                                                <span style="float: right;"><i class="glyphicon glyphicon-time"></i>{{msg.createdTime | subStringFilter(11,19)}}</span>
+                                            </div>
+                                        </div>
+
+
+<!--                                        消息体-->
+                                        <div v-for="(value, key) in childDetailMsgs" :key="key">
+<!--                                            "(value, key) in childDetailMsgs" :key="key"-->
+                                            <div class="divider"></div>
+<!--                                            <p>这是key:{{key}}</p>-->
+<!--                                            <p>这是value.length:{{value.length}}</p>-->
+<!--                                            <p>这是value:{{value}}</p>-->
+<!--                                            <p>这是循环:</p>-->
+<!--                                            <div v-for="v in value">-->
+<!--&lt;!&ndash;                                                <p>{{v}}</p>&ndash;&gt;-->
+<!--                                                <div v-for="vv in v">-->
+<!--                                                    {{vv.comment}}-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+                                            <p class="text-black">{{value[0][0].comment}}</p>
+                                            <div class="newest-tips-date m-top-20">
+                                                <div class="newest-tips-date-time pull-right" style="margin-top: -50px;">
+                                                    <div class="newest-author">
+                                                        <p class="text-black">by <span class="text-primary">{{value[0][0].userName}}</span></p>
+                                                    </div>
+                                                    <a href="#nowhere" @click="showCommentChildButton($event)" :value="value[0][0].childTieNo">回复</a>
+                                                    <span style="float: right;"><i class="glyphicon glyphicon-calendar"></i>{{value[0][0].createdTime | subStringFilter(0,10)}}</span>
+                                                    <span style="float: right;"><i class="glyphicon glyphicon-time"></i>{{value[0][0].createdTime | subStringFilter(11,19)}}</span>
+                                                </div>
+
+                                                <div v-for="v in value[1]">
+                                                    <div style="    margin-top: 30px;text-indent: 33px;">
+                                                        <p class="text-black" style="    display: inline;overflow: initial;">{{v.userName}}：</p>
+                                                        <span class="text-black">{{v.comment}}</span>
+<!--                                                        <span class="text-black" style="margin-left: 110px;"><a href="#nowhere">回复</a></span>-->
+                                                        <span style="float:right">{{v.createdTime}}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="showCommentChildClass" :id="value[0][0].childTieNo" v-show="showCommentChildInput">
+                                                    <div class="form-group" style="    margin-top: 60px;width: 68%;display: inline-block;">
+                                                        <input class="form-control " type="text" v-model="comment" placeholder="请输入内容.." style="    width: 100%;"/>
+                                                    </div>
+                                                    <div style="    display: inline-block;position: relative;left: 50px;">
+                                                        <button type="button" class="btn btn-primary btn-round" style="    border-radius: 10px;" @click="commentChildButton">回复</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+
+<!--                                        <div>-->
+<!--                                            <p class="text-black">暂无评论~</p>-->
+<!--                                        </div>-->
+                                    </div><!-- End off blog item -->
+
+                                    <div class="newest-blog-item border m-top-100">
+                                        <form class="m-top-40">
+                                            <div class="row">
+                                                <div class="col-sm-12" style="flex: 0 0 70%;">
+                                                    <div class="form-group" style="border: 1px solid #ccc;">
+                                                        <textarea class="form-control " v-model="childMsg.comment" placeholder="请输入内容.." style="    min-height: 4rem;resize: none;overflow-y: hidden;"></textarea>
+                                                    </div>
+                                                    <div style="    display: inline-block;position: absolute;left: 500px;top: -3px;">
+                                                        <button type="button" class="btn btn-primary btn-round" style="    border-radius: 10px;" @click="commentButton">评论</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </form>
+                                    </div><!-- End off blog item -->
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <!-- question-->
+                        <div class="card">
+                            <div id="headingTwoAlt" class="card-header">
+                                <h4 class="mb-0 accordion-heading">
+                                    <button data-toggle="collapse" data-target="#collapseTwoAlt" aria-expanded="false" aria-controls="collapseTwoAlt" class="d-flex align-items-center collapsed"><i class="icon-plug"></i><span>贴吧功能测试标题22222222222222222222222222222222222222222222222222222222222222222222222222222</span></button>
+                                </h4>
+                            </div>
+                            <div id="collapseTwoAlt" aria-labelledby="headingTwoAlt" data-parent="#accordion2" class="collapse">
+                                <div class="card-body">贴吧功能测试内容11111111111111111111111111111111111111111111111111111111111111111111111</div>
+                            </div>
+                        </div>
+                        <!-- question-->
+                        <div class="card">
+                            <div id="headingThreeAlt" class="card-header">
+                                <h4 class="mb-0 accordion-heading">
+                                    <button data-toggle="collapse" data-target="#collapseThreeAlt" aria-expanded="false" aria-controls="collapseThreeAlt" class="d-flex align-items-center collapsed"><i class="icon-shield-settings"></i><span>贴吧功能测试标题33333333333333333333333333333333333333333333333333333333333333</span></button>
+                                </h4>
+                            </div>
+                            <div id="collapseThreeAlt" aria-labelledby="headingThreeAlt" data-parent="#accordion2" class="collapse">
+                                <div class="card-body">贴吧功能测试内容11111111111111111111111111111111111111111111111111111111111111111111111</div>
+                            </div>
+                        </div>
+                        <!-- question-->
+                        <div class="card">
+                            <div id="headingFourAlt" class="card-header">
+                                <h4 class="mb-0 accordion-heading">
+                                    <button data-toggle="collapse" data-target="#collapseFourAlt" aria-expanded="false" aria-controls="collapseFourAlt" class="d-flex align-items-center collapsed"><i class="icon-stack-of-sheets"></i><span>贴吧功能测试标题5555555555555555555555555555555555555555555555555555555</span></button>
+                                </h4>
+                            </div>
+                            <div id="collapseFourAlt" aria-labelledby="headingFourAlt" data-parent="#accordion2" class="collapse">
+                                <div class="card-body">贴吧功能测试内容11111111111111111111111111111111111111111111111111111111111111111111111</div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- JavaScript files-->
+    <script src="/vendor/jquery/jquery.min.js"></script>
+    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script src="/vendor/jquery.cookie/jquery.cookie.js"> </script>
+    <script src="/vendor/lightbox2/js/lightbox.js"></script>
+    <script src="/js/front.js"></script>
+</div>
+</body>
+</html>

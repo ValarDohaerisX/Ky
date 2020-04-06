@@ -20,7 +20,7 @@ public class DateUtil {
     public static  SimpleDateFormat sdf = null;
 
     public DateUtil(){
-        sdf = new SimpleDateFormat();
+
     }
     /**
      * 将字符串解析为日期格式
@@ -29,6 +29,7 @@ public class DateUtil {
      */
     public Date formatString(String sdate,String pattern) throws ParseException {
 //        sdf = new SimpleDateFormat(pattern);
+        sdf = new SimpleDateFormat();
         sdf.applyPattern(pattern);
         return sdf.parse(sdate);
     }
@@ -40,22 +41,35 @@ public class DateUtil {
      */
     public String formatDate(Date date,String pattern){
 //        sdf = new SimpleDateFormat(pattern);
+        sdf = new SimpleDateFormat();
         sdf.applyPattern(pattern);
         return sdf.format(date);
     }
 
+    //获取当前日期
     public String getCurrDate(){
 //        sdf = new SimpleDateFormat(formatPattern1);
-        sdf.applyPattern(formatPattern1);
+        sdf = new SimpleDateFormat();
+        sdf.applyPattern(formatPattern2);
         return sdf.format(new Date());
     }
 
+    //获取当前时间
+    public String getCurrTime(){
+//        sdf = new SimpleDateFormat(formatPattern1);
+        sdf = new SimpleDateFormat();
+        sdf.applyPattern(formatPattern3);
+        return sdf.format(new Date());
+    }
+    //获取特定模式的日期
     public String getCurrDate(String pattern){
+        sdf = new SimpleDateFormat();
         sdf = new SimpleDateFormat(pattern);
         return sdf.format(new Date());
     }
 
     public Timestamp getCurrTimestamp(){
+        sdf = new SimpleDateFormat();
         sdf = new SimpleDateFormat(formatPattern1);
         sdf.setLenient(false);
         String s = sdf.format(new Date(System.currentTimeMillis()));

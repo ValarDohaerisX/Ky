@@ -12,6 +12,9 @@ import com.akz.ky.pojo.MajorPojo;
 import com.akz.ky.pojo.SecondCoursePojo;
 import com.akz.ky.service.MajorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,6 +26,7 @@ import java.util.List;
  * @Description
  */
 @Service
+@CacheConfig(cacheNames = "majors")
 public class MajorServiceImpl implements MajorService {
     @Autowired(required = false)
     MajorMapper majorMapper;
@@ -31,6 +35,7 @@ public class MajorServiceImpl implements MajorService {
     @Autowired(required = false)
     SecondCourseMapper secondCourseMapper;
     @Override
+    @CacheEvict(allEntries = true)
     public Result<MajorPojo> add(MajorPojo majorPojo) {
         MajorPojo exist = majorMapper.isExist(majorPojo.getMajorCode(), majorPojo.getMajorName());
         System.out.println("1");
@@ -53,6 +58,7 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
+    @Cacheable(key="'majors-majorsByFirstAndSecond-'+#p0+'-'+#p1")
     public Result<List<MajorPojo>> getMajor(int firstCourseNo, int secondCourseNo) {
         List<MajorPojo> majorPojos = majorMapper.listByFS(firstCourseNo, secondCourseNo);
         if (majorPojos==null||majorPojos.size()==0)
@@ -62,12 +68,14 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
+    @Cacheable(key="'majors-bySchoolNos-'+ #p0")
     public Result<List<MajorPojo>> getMajorBySchoolNo(int schoolNo) {
         List<MajorPojo> bySchoolNo = majorMapper.getBySchoolNo(schoolNo);
         return Result.success(bySchoolNo);
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public Result updateMajor(MajorPojo majorPojo) {
         if (majorPojo == null){
             return Result.failure(ApiReturnCode.C_Fail_Update,"获取不到需更新的专业信息，请检查异常.");
@@ -79,6 +87,7 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public Result deleteMajor(int majorNo) {
         if (0 == majorNo){
             return Result.failure(ApiReturnCode.C_Fail_Delete,"删除失败，接收参数值为0");
@@ -90,24 +99,28 @@ public class MajorServiceImpl implements MajorService {
     }
 
     @Override
+    @Cacheable(key="'majors-one-byMajorCode-'+ #p0")
     public Result<MajorPojo> getByMajorCode(String majorCode) {
         MajorPojo majorPojo = majorMapper.getByMajorCode(majorCode).get(0);
         return Result.success(majorPojo);
     }
 
     @Override
+    @Cacheable(key="'majors-one-byMajorName-'+ #p0")
     public Result<MajorPojo> getByMajorName(String majorName) {
         MajorPojo byMajorName = majorMapper.getByMajorName(majorName);
         return Result.success(byMajorName);
     }
 
     @Override
+    @Cacheable(key="'majors-all'")
     public Result<List<MajorPojo>> getAll() {
         List<MajorPojo> majorPojos = majorMapper.getAll();
         return Result.success(majorPojos);
     }
 
     @Override
+    @Cacheable(key="'majors-majorIndexRequest'")
     public List<MajorIndexRequestPojo> majorIndexRequest() {
         return majorMapper.majorIndexRequest();
     }

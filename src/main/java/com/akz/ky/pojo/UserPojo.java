@@ -2,6 +2,7 @@ package com.akz.ky.pojo;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.sql.Timestamp;
 
 /**
@@ -11,7 +12,7 @@ import java.sql.Timestamp;
  *
  */
 @Data
-public class UserPojo {
+public class UserPojo implements Serializable {
 //    --id,name,password,realName,sex,mobile,schoolname,grade,major,
 // userType,userPemission,signature,activity,badge,regTime
     //主键
@@ -20,6 +21,8 @@ public class UserPojo {
     String userLoginName;
     //用户密码
     String userLoginPassword;
+    //盐度
+    String salt;
     //用户名
     String userName;
     //用户性别
@@ -43,15 +46,15 @@ public class UserPojo {
     //用户等级
     int userLevel;
     //上一次登录时间
-    Timestamp lastLoginDate;
+    String lastLoginDate;
     //用户注册日期
-    Timestamp createDate;
+    String createDate;
     //用户注册时间
-    Timestamp createTime;
+    String createTime;
     //信息修改日期
-    Timestamp modifyDate;
+    String modifyDate;
     //信息修改时间
-    Timestamp modifyTime;
+    String modifyTime;
 
     //目标专业
 //    String aimMajor;

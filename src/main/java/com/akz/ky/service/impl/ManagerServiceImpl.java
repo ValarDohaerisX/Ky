@@ -6,6 +6,9 @@ import com.akz.ky.message.Result;
 import com.akz.ky.pojo.ManagerPojo;
 import com.akz.ky.service.ManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.HtmlUtils;
 
@@ -13,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.util.List;
 
 @Service
+@CacheConfig(cacheNames = "managers")
 public class ManagerServiceImpl implements ManagerService {
     @Autowired(required = false)
     ManagerMapper managerMapper;
@@ -80,6 +84,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Cacheable(key="'managers-confirmToReg'")
     public Result<List<ManagerPojo>> confirmToRegList() {
         List<ManagerPojo> managerPojos = managerMapper.confirmToRegList();
         if (managerPojos == null){
@@ -89,6 +94,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Cacheable(key="'managers-all'")
     public Result<List<ManagerPojo>> allManaList() {
         List<ManagerPojo> managerPojos = managerMapper.allManaList();
         if (managerPojos == null){
@@ -98,6 +104,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @Cacheable(key="'managers-one-'+ #p0")
     public Result<ManagerPojo> editManaInfo(int id) {
         ManagerPojo managerPojo = managerMapper.getById(id);
         if (managerPojo == null)
@@ -106,6 +113,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public Result updateManaInfo(ManagerPojo managerPojo) {
         System.out.println("进入到mana-update..");
         System.out.println("pojo-->"+managerPojo);
@@ -127,6 +135,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public boolean deleteManaInfo(int id) {
         System.out.println("进入到manager-serviceimpl中..");
 //        boolean flag = managerMapper.deleteManaInfo(id);

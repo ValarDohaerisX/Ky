@@ -9,6 +9,9 @@ import com.akz.ky.pojo.SecondCoursePojo;
 import com.akz.ky.service.SecondCourseService;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheConfig;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +23,7 @@ import java.util.List;
  * @Description
  */
 @Service
+@CacheConfig(cacheNames = "secondCourses")
 public class SecondCourseServiceImpl implements SecondCourseService {
 
 
@@ -29,6 +33,7 @@ public class SecondCourseServiceImpl implements SecondCourseService {
     @Autowired(required = false)
     FirstCourseMapper firstCourseMapper;
     @Override
+    @Cacheable(key="'secondCourses-one-'+ #p0")
     public Result<SecondCoursePojo> getById(int id) {
         SecondCoursePojo secondCoursePojo = secondCourseMapper.getById(id);
         if (secondCoursePojo == null){
@@ -45,6 +50,7 @@ public class SecondCourseServiceImpl implements SecondCourseService {
         secondCoursePojo.setFirstCoursePojo(firstCoursePojo);
     }
     @Override
+    @Cacheable(key="'secondCourses-byCodes'+ #p0")
     public Result<List<SecondCoursePojo>> getByLikeCode(String code) {
         List<SecondCoursePojo> byCode = secondCourseMapper.getByLikeCode(code);
         if (byCode == null || byCode.size()==0){
@@ -55,6 +61,7 @@ public class SecondCourseServiceImpl implements SecondCourseService {
     }
 
     @Override
+    @Cacheable(key="'secondCourses-byNames'+ #p0")
     public Result<List<SecondCoursePojo>> getByName(String name) {
         List<SecondCoursePojo> byCode = secondCourseMapper.getByName(name);
         if (byCode == null || byCode.size()==0){
@@ -64,6 +71,7 @@ public class SecondCourseServiceImpl implements SecondCourseService {
     }
 
     @Override
+    @Cacheable(key="'secondCourses-all'")
     public Result<List<SecondCoursePojo>> getAll() {
         List<SecondCoursePojo> all = secondCourseMapper.getAll();
         if (all == null){
@@ -74,6 +82,7 @@ public class SecondCourseServiceImpl implements SecondCourseService {
     }
 
     @Override
+    @Cacheable(key="'secondCourses-byFirstCourseCodes-'+#p0")
     public Result<List<SecondCoursePojo>> getByFirstCourseCode(String firstCode) {
         System.out.println("firstCode:"+firstCode);
         List<SecondCoursePojo> byCode = secondCourseMapper.getByFirstCourseCode(firstCode);
@@ -86,6 +95,7 @@ public class SecondCourseServiceImpl implements SecondCourseService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public Result delete(int id) {
         boolean flag = secondCourseMapper.delete(id);
         if (!flag)
@@ -94,6 +104,7 @@ public class SecondCourseServiceImpl implements SecondCourseService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public Result<SecondCoursePojo> add(SecondCoursePojo secondCoursePojo) {
         String firstCode = secondCoursePojo.getFirstCourseCode();
         FirstCoursePojo byCode = firstCourseMapper.getByCode(firstCode);
@@ -108,6 +119,7 @@ public class SecondCourseServiceImpl implements SecondCourseService {
     }
 
     @Override
+    @CacheEvict(allEntries = true)
     public Result update(SecondCoursePojo secondCoursePojo) {
         Result<SecondCoursePojo> byId = getById(secondCoursePojo.getSecondCourseNo());
         if (byId.getReturnCode().getCode() == 1004)

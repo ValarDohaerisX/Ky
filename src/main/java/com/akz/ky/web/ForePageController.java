@@ -85,6 +85,15 @@ public class ForePageController {
         return "fore/schoolIndex";
     }
 
+    @GetMapping(value = "/tieba")
+    public String tieba(){
+        return "fore/tieba";
+    }
+
+    @GetMapping(value = "/video")
+    public String video(){
+        return "fore/video";
+    }
     public static void main(String[] args) {
         String loanEndDate = "2020-03-12";
         String pattern = "yyyy-MM-dd";

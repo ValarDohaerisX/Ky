@@ -62,7 +62,7 @@ public class SchoolController {
     }
 
     @RequestMapping(value = "getAll",method = RequestMethod.GET)
-    public Result getAll(){
+    public Result<List<SchoolPojo>> getAll(){
         return schoolService.getAll();
     }
 
