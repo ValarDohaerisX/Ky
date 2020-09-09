@@ -16,7 +16,7 @@ public interface ManagerMapper {
             "manaPemission = #{m.manaPemission}," +
             "appFlag = #{m.appFlag}" +
             "</script>")
-    @Options(useGeneratedKeys = true,keyProperty = "id")
+//    @Options(useGeneratedKeys = true,keyProperty = "id",keyColumn="m.id")
     boolean registerOne(@Param("m") ManagerPojo managerPojo);
 
 //    @Update("<script>update manager set </script>")

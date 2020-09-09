@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Mapper
 public interface FirstCourseMapper {
-    @Insert({"<script>insert into firstCourse set firstCourseCode = #{f.code},firstCourseName = #{f.name}</script>"})
+    @Insert({"<script>insert into firstCourse set firstCourseCode = #{f.firstCourseCode},firstCourseName = #{f.firstCourseName}</script>"})
 //    @Options(useGeneratedKeys = true,keyProperty = "Id")
     boolean add(@Param("f") FirstCoursePojo firstCoursePojo);
 
